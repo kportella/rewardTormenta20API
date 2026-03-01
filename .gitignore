@@ -89,3 +89,6 @@ desktop.ini
 
 # Sensitive config
 **/appsettings.Production.json
+
+# Claude Code
+.claude/
