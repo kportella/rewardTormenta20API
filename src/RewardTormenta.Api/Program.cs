@@ -58,7 +58,7 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
                 miscItemName = name;
                 miscRoll = equipRoll;
             }
-            else if (itemRow.ItemDescription.Contains("poção"))
+            else if (itemRow.ItemDescription.Contains("poção") || itemRow.ItemDescription.Contains("poções"))
             {
                 potions = roller.RollPotions(itemRow.ItemDescription)
                     .Select(t => new PotionResult
@@ -97,6 +97,28 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
     }
 })
 .WithName("GenerateTreasure")
+.WithOpenApi();
+
+app.MapGet("/roll/accessory", (string tier, TreasureRoller roller) =>
+{
+    if (!Enum.TryParse<MagicItemTier>(tier, ignoreCase: true, out var magicTier))
+        return Results.BadRequest(new { error = $"Unknown tier '{tier}'. Use Menor, Médio, or Maior." });
+
+    int roll = roller.RollD100();
+    var accessory = roller.RollAccessory(magicTier, roll);
+
+    if (accessory is null)
+        return Results.Problem("No accessory matched the roll — check table data.");
+
+    return Results.Ok(new
+    {
+        tier     = accessory.Tier.ToString(),
+        name     = accessory.Name,
+        price    = accessory.Price,
+        roll
+    });
+})
+.WithName("RollAccessory")
 .WithOpenApi();
 
 app.Run();

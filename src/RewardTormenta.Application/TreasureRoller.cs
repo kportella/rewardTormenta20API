@@ -102,6 +102,16 @@ public class TreasureRoller
         return results;
     }
 
+    // ── Accessories ──────────────────────────────────────────────────────────
+
+    public Accessory? RollAccessory(MagicItemTier tier, int? roll = null)
+    {
+        int r = roll ?? RollD100();
+        return Tables.Accessories
+            .Where(a => a.Tier == tier && r >= a.MinRoll && r <= a.MaxRoll)
+            .FirstOrDefault();
+    }
+
     // ── Specific magic weapons ───────────────────────────────────────────────
 
     public SpecificWeapon? RollSpecificWeapon(int? roll = null)

@@ -110,3 +110,15 @@ public class Potion
     public int MinRoll { get; init; }
     public int MaxRoll { get; init; }
 }
+
+/// <summary>
+/// Represents a specific magic accessory from Tabelas 8-13, 8-14, and 8-15.
+/// </summary>
+public class Accessory
+{
+    public required string Name { get; init; }
+    public int Price { get; init; }        // value in T$
+    public MagicItemTier Tier { get; init; }
+    public int MinRoll { get; init; }
+    public int MaxRoll { get; init; }
+}

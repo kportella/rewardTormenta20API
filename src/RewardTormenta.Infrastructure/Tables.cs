@@ -232,6 +232,82 @@ public static class Tables
         new() { Name = "Curar Ferimentos (11d8+11 PV)",                             Price = 3_000, MinRoll = 97,  MaxRoll = 100 },
     ];
 
+    // ── Acessórios (Tabelas 8-13, 8-14, 8-15) ───────────────────────────────
+
+    public static readonly IReadOnlyList<Accessory> Accessories =
+    [
+        // Tabela 8-13 — Menores
+        new() { Tier = MagicItemTier.Menor, Name = "Anel do sustento",              Price = 3_000,   MinRoll = 1,   MaxRoll = 2   },
+        new() { Tier = MagicItemTier.Menor, Name = "Bainha mágica",                  Price = 3_000,   MinRoll = 3,   MaxRoll = 7   },
+        new() { Tier = MagicItemTier.Menor, Name = "Corda da escalada",              Price = 3_000,   MinRoll = 8,   MaxRoll = 12  },
+        new() { Tier = MagicItemTier.Menor, Name = "Ferraduras da velocidade",       Price = 3_000,   MinRoll = 13,  MaxRoll = 14  },
+        new() { Tier = MagicItemTier.Menor, Name = "Garrafa da fumaça eterna",       Price = 3_000,   MinRoll = 15,  MaxRoll = 19  },
+        new() { Tier = MagicItemTier.Menor, Name = "Gema da luminosidade",           Price = 3_000,   MinRoll = 20,  MaxRoll = 24  },
+        new() { Tier = MagicItemTier.Menor, Name = "Manto élfico",                   Price = 3_000,   MinRoll = 25,  MaxRoll = 29  },
+        new() { Tier = MagicItemTier.Menor, Name = "Mochila de carga",               Price = 3_000,   MinRoll = 30,  MaxRoll = 34  },
+        new() { Tier = MagicItemTier.Menor, Name = "Brincos da sagacidade",          Price = 4_500,   MinRoll = 35,  MaxRoll = 40  },
+        new() { Tier = MagicItemTier.Menor, Name = "Luvas da delicadeza",            Price = 4_500,   MinRoll = 41,  MaxRoll = 46  },
+        new() { Tier = MagicItemTier.Menor, Name = "Manoplas da força do ogro",      Price = 4_500,   MinRoll = 47,  MaxRoll = 52  },
+        new() { Tier = MagicItemTier.Menor, Name = "Manta da resistência",           Price = 4_500,   MinRoll = 53,  MaxRoll = 59  },
+        new() { Tier = MagicItemTier.Menor, Name = "Manto do fascínio",              Price = 4_500,   MinRoll = 60,  MaxRoll = 65  },
+        new() { Tier = MagicItemTier.Menor, Name = "Pingente da sensatez",           Price = 4_500,   MinRoll = 66,  MaxRoll = 71  },
+        new() { Tier = MagicItemTier.Menor, Name = "Torque do vigor",                Price = 4_500,   MinRoll = 72,  MaxRoll = 77  },
+        new() { Tier = MagicItemTier.Menor, Name = "Chapéu do disfarce",             Price = 6_000,   MinRoll = 78,  MaxRoll = 82  },
+        new() { Tier = MagicItemTier.Menor, Name = "Flauta fantasma",                Price = 6_000,   MinRoll = 83,  MaxRoll = 84  },
+        new() { Tier = MagicItemTier.Menor, Name = "Lanterna da revelação",          Price = 6_000,   MinRoll = 85,  MaxRoll = 89  },
+        new() { Tier = MagicItemTier.Menor, Name = "Anel da proteção",               Price = 9_000,   MinRoll = 90,  MaxRoll = 96  },
+        new() { Tier = MagicItemTier.Menor, Name = "Anel do escudo mental",          Price = 9_000,   MinRoll = 97,  MaxRoll = 98  },
+        new() { Tier = MagicItemTier.Menor, Name = "Pingente da saúde",              Price = 9_000,   MinRoll = 99,  MaxRoll = 100 },
+
+        // Tabela 8-14 — Médios
+        new() { Tier = MagicItemTier.Médio, Name = "Anel de telecinese",             Price = 10_500,  MinRoll = 1,   MaxRoll = 4   },
+        new() { Tier = MagicItemTier.Médio, Name = "Bola de cristal",                Price = 10_500,  MinRoll = 5,   MaxRoll = 8   },
+        new() { Tier = MagicItemTier.Médio, Name = "Caveira maldita",                Price = 10_500,  MinRoll = 9,   MaxRoll = 10  },
+        new() { Tier = MagicItemTier.Médio, Name = "Botas aladas",                   Price = 15_000,  MinRoll = 11,  MaxRoll = 14  },
+        new() { Tier = MagicItemTier.Médio, Name = "Braceletes de bronze",           Price = 16_500,  MinRoll = 15,  MaxRoll = 18  },
+        new() { Tier = MagicItemTier.Médio, Name = "Anel da energia",                Price = 21_000,  MinRoll = 19,  MaxRoll = 24  },
+        new() { Tier = MagicItemTier.Médio, Name = "Anel da vitalidade",             Price = 21_000,  MinRoll = 25,  MaxRoll = 30  },
+        new() { Tier = MagicItemTier.Médio, Name = "Anel de invisibilidade",         Price = 21_000,  MinRoll = 31,  MaxRoll = 34  },
+        new() { Tier = MagicItemTier.Médio, Name = "Braçadeiras do arqueiro",        Price = 21_000,  MinRoll = 35,  MaxRoll = 38  },
+        new() { Tier = MagicItemTier.Médio, Name = "Brincos de Marah",               Price = 21_000,  MinRoll = 39,  MaxRoll = 42  },
+        new() { Tier = MagicItemTier.Médio, Name = "Faixas do pugilista",            Price = 21_000,  MinRoll = 43,  MaxRoll = 46  },
+        new() { Tier = MagicItemTier.Médio, Name = "Manto da aranha",                Price = 21_000,  MinRoll = 47,  MaxRoll = 50  },
+        new() { Tier = MagicItemTier.Médio, Name = "Vassoura voadora",               Price = 21_000,  MinRoll = 51,  MaxRoll = 54  },
+        new() { Tier = MagicItemTier.Médio, Name = "Símbolo abençoado",              Price = 21_000,  MinRoll = 55,  MaxRoll = 58  },
+        new() { Tier = MagicItemTier.Médio, Name = "Amuleto da robustez",            Price = 25_500,  MinRoll = 59,  MaxRoll = 64  },
+        new() { Tier = MagicItemTier.Médio, Name = "Botas velozes",                  Price = 25_500,  MinRoll = 65,  MaxRoll = 68  },
+        new() { Tier = MagicItemTier.Médio, Name = "Cinta da força do gigante",      Price = 25_500,  MinRoll = 69,  MaxRoll = 74  },
+        new() { Tier = MagicItemTier.Médio, Name = "Coroa majestosa",                Price = 25_500,  MinRoll = 75,  MaxRoll = 80  },
+        new() { Tier = MagicItemTier.Médio, Name = "Estola da serenidade",           Price = 25_500,  MinRoll = 81,  MaxRoll = 86  },
+        new() { Tier = MagicItemTier.Médio, Name = "Manto do morcego",               Price = 25_500,  MinRoll = 87,  MaxRoll = 88  },
+        new() { Tier = MagicItemTier.Médio, Name = "Pulseiras da celeridade",        Price = 25_500,  MinRoll = 89,  MaxRoll = 94  },
+        new() { Tier = MagicItemTier.Médio, Name = "Tiara da sapiência",             Price = 25_500,  MinRoll = 95,  MaxRoll = 100 },
+
+        // Tabela 8-15 — Maiores
+        new() { Tier = MagicItemTier.Maior, Name = "Elmo do teletransporte",         Price = 30_000,  MinRoll = 1,   MaxRoll = 2   },
+        new() { Tier = MagicItemTier.Maior, Name = "Gema da telepatia",              Price = 30_000,  MinRoll = 3,   MaxRoll = 4   },
+        new() { Tier = MagicItemTier.Maior, Name = "Gema elemental",                 Price = 30_000,  MinRoll = 5,   MaxRoll = 9   },
+        new() { Tier = MagicItemTier.Maior, Name = "Manual da saúde corporal",       Price = 30_000,  MinRoll = 10,  MaxRoll = 15  },
+        new() { Tier = MagicItemTier.Maior, Name = "Manual do bom exercício",        Price = 30_000,  MinRoll = 16,  MaxRoll = 21  },
+        new() { Tier = MagicItemTier.Maior, Name = "Manual dos movimentos precisos", Price = 30_000,  MinRoll = 22,  MaxRoll = 27  },
+        new() { Tier = MagicItemTier.Maior, Name = "Medalhão de Lena",               Price = 30_000,  MinRoll = 28,  MaxRoll = 34  },
+        new() { Tier = MagicItemTier.Maior, Name = "Tomo da compreensão",            Price = 30_000,  MinRoll = 35,  MaxRoll = 40  },
+        new() { Tier = MagicItemTier.Maior, Name = "Tomo da liderança e influência", Price = 30_000,  MinRoll = 41,  MaxRoll = 46  },
+        new() { Tier = MagicItemTier.Maior, Name = "Tomo dos grandes pensamentos",   Price = 30_000,  MinRoll = 47,  MaxRoll = 52  },
+        new() { Tier = MagicItemTier.Maior, Name = "Anel refletor",                  Price = 51_000,  MinRoll = 53,  MaxRoll = 57  },
+        new() { Tier = MagicItemTier.Maior, Name = "Cinto do campeão",               Price = 51_000,  MinRoll = 58,  MaxRoll = 60  },
+        new() { Tier = MagicItemTier.Maior, Name = "Colar guardião",                 Price = 51_000,  MinRoll = 61,  MaxRoll = 67  },
+        new() { Tier = MagicItemTier.Maior, Name = "Estatueta animista",             Price = 51_000,  MinRoll = 68,  MaxRoll = 72  },
+        new() { Tier = MagicItemTier.Maior, Name = "Anel da liberdade",              Price = 60_000,  MinRoll = 73,  MaxRoll = 77  },
+        new() { Tier = MagicItemTier.Maior, Name = "Tapete voador",                  Price = 60_000,  MinRoll = 78,  MaxRoll = 82  },
+        new() { Tier = MagicItemTier.Maior, Name = "Braceletes de ouro",             Price = 64_500,  MinRoll = 83,  MaxRoll = 87  },
+        new() { Tier = MagicItemTier.Maior, Name = "Espelho da oposição",            Price = 75_000,  MinRoll = 88,  MaxRoll = 89  },
+        new() { Tier = MagicItemTier.Maior, Name = "Robe do arquimago",              Price = 90_000,  MinRoll = 90,  MaxRoll = 94  },
+        new() { Tier = MagicItemTier.Maior, Name = "Orbe das tempestades",           Price = 97_500,  MinRoll = 95,  MaxRoll = 96  },
+        new() { Tier = MagicItemTier.Maior, Name = "Anel da regeneração",            Price = 150_000, MinRoll = 97,  MaxRoll = 98  },
+        new() { Tier = MagicItemTier.Maior, Name = "Espelho do aprisionamento",      Price = 150_000, MinRoll = 99,  MaxRoll = 100 },
+    ];
+
     // ── Riquezas ─────────────────────────────────────────────────────────────
 
     public static readonly IReadOnlyList<Wealth> Wealths =
