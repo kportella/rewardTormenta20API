@@ -135,6 +135,58 @@ public class TreasureRoller
         }
     }
 
+    // ── Armor enchantment ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Rolls a random armor enchantment from Tabela 8-10.
+    /// Re-rolls Guardião for minor items (footnote ²).
+    /// Re-rolls Animado and Esmagador for non-shield armors (footnote ¹).
+    /// </summary>
+    public ArmorEnchantment RollArmorEnchantment(bool isMinorItem = false, bool isShield = false)
+    {
+        while (true)
+        {
+            int r = RollD100();
+            ArmorEnchantment enchantment = r switch
+            {
+                >= 1  and <= 6  => ArmorEnchantment.Abascanto,
+                >= 7  and <= 10 => ArmorEnchantment.Abençoado,
+                >= 11 and <= 12 => ArmorEnchantment.Acrobático,
+                >= 13 and <= 14 => ArmorEnchantment.Alado,
+                >= 15 and <= 16 => ArmorEnchantment.Animado,
+                >= 17 and <= 18 => ArmorEnchantment.Assustador,
+                >= 19 and <= 22 => ArmorEnchantment.Cáustica,
+                >= 23 and <= 32 => ArmorEnchantment.Defensor,
+                >= 33 and <= 34 => ArmorEnchantment.Escorregadio,
+                >= 35 and <= 36 => ArmorEnchantment.Esmagador,
+                >= 37 and <= 38 => ArmorEnchantment.Fantasmagórico,
+                >= 39 and <= 40 => ArmorEnchantment.Fortificado,
+                >= 41 and <= 44 => ArmorEnchantment.Gélido,
+                >= 45 and <= 54 => ArmorEnchantment.Guardião,
+                >= 55 and <= 56 => ArmorEnchantment.Hipnótico,
+                >= 57 and <= 58 => ArmorEnchantment.Ilusório,
+                >= 59 and <= 62 => ArmorEnchantment.Incandescente,
+                >= 63 and <= 68 => ArmorEnchantment.Invulnerável,
+                >= 69 and <= 72 => ArmorEnchantment.Opaco,
+                >= 73 and <= 78 => ArmorEnchantment.Protetor,
+                >= 79 and <= 80 => ArmorEnchantment.Refletor,
+                >= 81 and <= 84 => ArmorEnchantment.Relampejante,
+                >= 85 and <= 86 => ArmorEnchantment.Reluzente,
+                >= 87 and <= 88 => ArmorEnchantment.Sombrio,
+                >= 89 and <= 90 => ArmorEnchantment.Zeloso,
+                _               => ArmorEnchantment.ItemEspecífico,
+            };
+
+            if (isMinorItem && enchantment is ArmorEnchantment.Guardião)
+                continue;
+
+            if (!isShield && enchantment is ArmorEnchantment.Animado or ArmorEnchantment.Esmagador)
+                continue;
+
+            return enchantment;
+        }
+    }
+
     // ── Special material ─────────────────────────────────────────────────────
 
     public SpecialMaterial RollSpecialMaterial()

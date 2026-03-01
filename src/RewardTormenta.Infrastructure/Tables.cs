@@ -169,6 +169,13 @@ public static class Tables
         new() { Name = "Vingadora sagrada",       Price = 200_000, MinRoll = 96,  MaxRoll = 100 },
     ];
 
+    // ── Armaduras Específicas ────────────────────────────────────────────────
+
+    public static readonly IReadOnlyList<SpecificArmor> SpecificArmors =
+    [
+        // Tabela 8-11 — to be populated
+    ];
+
     // ── Riquezas ─────────────────────────────────────────────────────────────
 
     public static readonly IReadOnlyList<Wealth> Wealths =

@@ -104,3 +104,33 @@ public enum MagicItemTier
     Médio,
     Maior
 }
+
+public enum ArmorEnchantment
+{
+    Abascanto,
+    Abençoado,
+    Acrobático,
+    Alado,
+    Animado,           // Apenas escudos. Para armaduras, role novamente.
+    Assustador,
+    Cáustica,
+    Defensor,
+    Escorregadio,
+    Esmagador,         // Apenas escudos. Para armaduras, role novamente.
+    Fantasmagórico,
+    Fortificado,
+    Gélido,
+    Guardião,          // Conta como dois encantos. Para itens menores, role novamente.
+    Hipnótico,
+    Ilusório,
+    Incandescente,
+    Invulnerável,
+    Opaco,
+    Protetor,
+    Refletor,
+    Relampejante,
+    Reluzente,
+    Sombrio,
+    Zeloso,
+    ItemEspecífico
+}

@@ -72,3 +72,30 @@ public class MagicWeapon
                               or WeaponEnchantment.Lancinante
                               or WeaponEnchantment.Magnífica ? 2 : 1);
 }
+
+/// <summary>
+/// Represents a specific (named) magic armor from the Armaduras Específicas table.
+/// </summary>
+public class SpecificArmor
+{
+    public required string Name { get; init; }
+    public int Price { get; init; }
+    public int MinRoll { get; init; }
+    public int MaxRoll { get; init; }
+}
+
+/// <summary>
+/// Represents an enchanted magic armor or shield with one or more enchantments.
+/// </summary>
+public class MagicArmor
+{
+    public required string BaseArmorName { get; init; }
+    public List<ArmorEnchantment> Enchantments { get; init; } = [];
+    public MagicItemTier Tier { get; init; }
+
+    /// <summary>
+    /// Total enchantment count — Guardião counts as two.
+    /// </summary>
+    public int TotalEnchantmentSlots =>
+        Enchantments.Sum(e => e is ArmorEnchantment.Guardião ? 2 : 1);
+}
