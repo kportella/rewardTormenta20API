@@ -188,6 +188,50 @@ public static class Tables
         new() { Name = "Armadura da luz",      Price = 150_000, MinRoll = 94,  MaxRoll = 100 },
     ];
 
+    // ── Poções ───────────────────────────────────────────────────────────────
+
+    public static readonly IReadOnlyList<Potion> Potions =
+    [
+        new() { Name = "Abençoar Alimentos (óleo)",                                 Price = 30,    MinRoll = 1,   MaxRoll = 1   },
+        new() { Name = "Área Escorregadia (granada)",                               Price = 30,    MinRoll = 2,   MaxRoll = 3   },
+        new() { Name = "Arma Mágica (óleo)",                                        Price = 30,    MinRoll = 4,   MaxRoll = 6   },
+        new() { Name = "Compreensão",                                               Price = 30,    MinRoll = 7,   MaxRoll = 7   },
+        new() { Name = "Curar Ferimentos (2d8+2 PV)",                               Price = 30,    MinRoll = 8,   MaxRoll = 15  },
+        new() { Name = "Disfarce Ilusório",                                         Price = 30,    MinRoll = 16,  MaxRoll = 18  },
+        new() { Name = "Escuridão (óleo)",                                          Price = 30,    MinRoll = 19,  MaxRoll = 20  },
+        new() { Name = "Luz (óleo)",                                                Price = 30,    MinRoll = 21,  MaxRoll = 22  },
+        new() { Name = "Névoa (granada)",                                           Price = 30,    MinRoll = 23,  MaxRoll = 24  },
+        new() { Name = "Primor Atlético",                                           Price = 30,    MinRoll = 25,  MaxRoll = 26  },
+        new() { Name = "Proteção Divina",                                           Price = 30,    MinRoll = 27,  MaxRoll = 28  },
+        new() { Name = "Resistência à Energia",                                     Price = 30,    MinRoll = 29,  MaxRoll = 30  },
+        new() { Name = "Sono",                                                      Price = 30,    MinRoll = 31,  MaxRoll = 32  },
+        new() { Name = "Suporte Ambiental",                                         Price = 30,    MinRoll = 33,  MaxRoll = 33  },
+        new() { Name = "Tranca Arcana (óleo)",                                      Price = 30,    MinRoll = 34,  MaxRoll = 34  },
+        new() { Name = "Visão Mística",                                             Price = 30,    MinRoll = 35,  MaxRoll = 35  },
+        new() { Name = "Vitalidade Fantasma",                                       Price = 30,    MinRoll = 36,  MaxRoll = 36  },
+        new() { Name = "Escudo da Fé (aprimoramento para duração cena)",            Price = 120,   MinRoll = 37,  MaxRoll = 38  },
+        new() { Name = "Alterar Tamanho",                                           Price = 270,   MinRoll = 39,  MaxRoll = 40  },
+        new() { Name = "Aparência Perfeita",                                        Price = 270,   MinRoll = 41,  MaxRoll = 42  },
+        new() { Name = "Armamento da Natureza (óleo)",                              Price = 270,   MinRoll = 43,  MaxRoll = 43  },
+        new() { Name = "Bala de Fogo (granada)",                                    Price = 270,   MinRoll = 44,  MaxRoll = 49  },
+        new() { Name = "Camuflagem Ilusória",                                       Price = 270,   MinRoll = 50,  MaxRoll = 51  },
+        new() { Name = "Concentração de Combate (aprimoramento para duração cena)", Price = 270,   MinRoll = 52,  MaxRoll = 53  },
+        new() { Name = "Curar Ferimentos (4d8+4 PV)",                               Price = 270,   MinRoll = 54,  MaxRoll = 62  },
+        new() { Name = "Forma Divina",                                              Price = 270,   MinRoll = 63,  MaxRoll = 66  },
+        new() { Name = "Mente Divina",                                              Price = 270,   MinRoll = 67,  MaxRoll = 68  },
+        new() { Name = "Metamorfose",                                               Price = 270,   MinRoll = 69,  MaxRoll = 70  },
+        new() { Name = "Purificação",                                               Price = 270,   MinRoll = 71,  MaxRoll = 75  },
+        new() { Name = "Velocidade",                                                Price = 270,   MinRoll = 76,  MaxRoll = 77  },
+        new() { Name = "Vestimenta da Fé (óleo)",                                   Price = 270,   MinRoll = 78,  MaxRoll = 79  },
+        new() { Name = "Voz Divina",                                                Price = 270,   MinRoll = 80,  MaxRoll = 80  },
+        new() { Name = "Arma Mágica (óleo; aprimoramento para bônus +3)",           Price = 750,   MinRoll = 81,  MaxRoll = 82  },
+        new() { Name = "Curar Ferimentos (7d8+7 PV)",                               Price = 1_080, MinRoll = 83,  MaxRoll = 88  },
+        new() { Name = "Físico Divino (aprimoramento para três atributos)",         Price = 1_080, MinRoll = 89,  MaxRoll = 89  },
+        new() { Name = "Invisibilidade (aprimoramento para duração cena)",          Price = 1_080, MinRoll = 90,  MaxRoll = 92  },
+        new() { Name = "Bola de Fogo (granada; aprimoramento para 10d6 de dano)",   Price = 1_470, MinRoll = 93,  MaxRoll = 96  },
+        new() { Name = "Curar Ferimentos (11d8+11 PV)",                             Price = 3_000, MinRoll = 97,  MaxRoll = 100 },
+    ];
+
     // ── Riquezas ─────────────────────────────────────────────────────────────
 
     public static readonly IReadOnlyList<Wealth> Wealths =

@@ -99,3 +99,14 @@ public class MagicArmor
     public int TotalEnchantmentSlots =>
         Enchantments.Sum(e => e is ArmorEnchantment.Guardião ? 2 : 1);
 }
+
+/// <summary>
+/// Represents a potion from Tabela 8-12.
+/// </summary>
+public class Potion
+{
+    public required string Name { get; init; }
+    public int Price { get; init; }   // value in T$
+    public int MinRoll { get; init; }
+    public int MaxRoll { get; init; }
+}

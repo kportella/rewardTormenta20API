@@ -41,6 +41,13 @@ public class MoneyResult
     public int? Roll { get; init; }
 }
 
+public class PotionResult
+{
+    public required string Name { get; init; }
+    public int Price { get; init; }
+    public int Roll { get; init; }
+}
+
 public class ItemResult
 {
     public required string Description { get; init; }   // e.g. "Diverso", "Superior (2 melhorias)"
@@ -49,4 +56,5 @@ public class ItemResult
     public int? Roll { get; init; }
     public string? Item { get; init; }                   // resolved misc item name (when Description == "Diverso")
     public int? MiscRoll { get; init; }                  // secondary d100 roll used to pick the misc item
+    public List<PotionResult>? Potions { get; init; }    // resolved potions (when Description contains "poção")
 }

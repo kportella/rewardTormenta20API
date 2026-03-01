@@ -44,6 +44,7 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
         {
             string? miscItemName = null;
             int? miscRoll = null;
+            List<PotionResult>? potions = null;
 
             if (itemRow.ItemDescription == "Diverso")
             {
@@ -57,6 +58,17 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
                 miscItemName = name;
                 miscRoll = equipRoll;
             }
+            else if (itemRow.ItemDescription.Contains("poção"))
+            {
+                potions = roller.RollPotions(itemRow.ItemDescription)
+                    .Select(t => new PotionResult
+                    {
+                        Name  = t.Potion.Name,
+                        Price = t.Potion.Price,
+                        Roll  = t.Roll
+                    })
+                    .ToList();
+            }
 
             item = new ItemResult
             {
@@ -65,7 +77,8 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
                 HasDualRoll  = itemRow.ItemHasDualRoll,
                 Roll         = itemRoll,
                 Item         = miscItemName,
-                MiscRoll     = miscRoll
+                MiscRoll     = miscRoll,
+                Potions      = potions
             };
         }
 

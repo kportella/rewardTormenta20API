@@ -72,6 +72,36 @@ public class TreasureRoller
         return Lookup(Tables.MiscItems, r, m => m.MinRoll, m => m.MaxRoll);
     }
 
+    // ── Potions ──────────────────────────────────────────────────────────────
+
+    public Potion? RollPotion(int? roll = null)
+    {
+        int r = roll ?? RollD100();
+        return Lookup(Tables.Potions, r, p => p.MinRoll, p => p.MaxRoll);
+    }
+
+    /// <summary>
+    /// Parses a potion count description (e.g. "1 poção", "1d3 poções", "1d4+1 poções")
+    /// and returns one rolled potion per count.
+    /// </summary>
+    public List<(Potion Potion, int Roll)> RollPotions(string description)
+    {
+        string countExpr = description.Split(' ')[0];
+        int count = countExpr.Contains('d')
+            ? EvaluateDiceExpression(countExpr)
+            : int.Parse(countExpr);
+
+        var results = new List<(Potion, int)>(count);
+        for (int i = 0; i < count; i++)
+        {
+            int roll = RollD100();
+            var potion = RollPotion(roll);
+            if (potion is not null)
+                results.Add((potion, roll));
+        }
+        return results;
+    }
+
     // ── Specific magic weapons ───────────────────────────────────────────────
 
     public SpecificWeapon? RollSpecificWeapon(int? roll = null)
