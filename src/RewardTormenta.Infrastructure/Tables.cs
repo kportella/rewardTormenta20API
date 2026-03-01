@@ -1,3 +1,5 @@
+using RewardTormenta.Domain.Models;
+
 namespace RewardTormenta.Infrastructure;
 
 /// <summary>

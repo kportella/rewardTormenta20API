@@ -11,4 +11,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RewardTormenta.Application\RewardTormenta.Application.csproj" />
+    <ProjectReference Include="..\RewardTormenta.Domain\RewardTormenta.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

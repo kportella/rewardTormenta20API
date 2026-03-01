@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RewardTormenta.Domain\RewardTormenta.Domain.csproj" />
+    <ProjectReference Include="..\RewardTormenta.Infrastructure\RewardTormenta.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
