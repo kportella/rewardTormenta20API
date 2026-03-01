@@ -39,17 +39,35 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
             }
         }
 
-        var result = new TreasureResult
+        ItemResult? item = null;
+        if (itemRow is not null)
         {
-            ChallengeRating = ParseChallengeRating(challengeRating),
-            Money = money,
-            Item = itemRow is not null ? new ItemResult
+            string? miscItemName = null;
+            int? miscRoll = null;
+
+            if (itemRow.ItemDescription == "Diverso")
+            {
+                int roll = roller.RollD100();
+                miscItemName = roller.RollMiscItem(roll)?.Name;
+                miscRoll = roll;
+            }
+
+            item = new ItemResult
             {
                 Description  = itemRow.ItemDescription,
                 HasRollBonus = itemRow.ItemHasRollBonus,
                 HasDualRoll  = itemRow.ItemHasDualRoll,
-                Roll         = itemRoll
-            } : null
+                Roll         = itemRoll,
+                Item         = miscItemName,
+                MiscRoll     = miscRoll
+            };
+        }
+
+        var result = new TreasureResult
+        {
+            ChallengeRating = ParseChallengeRating(challengeRating),
+            Money = money,
+            Item  = item
         };
 
         return Results.Ok(result);

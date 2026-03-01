@@ -47,4 +47,6 @@ public class ItemResult
     public bool HasRollBonus { get; init; }              // ⁺% modifier
     public bool HasDualRoll { get; init; }               // ²ᴰ modifier
     public int? Roll { get; init; }
+    public string? Item { get; init; }                   // resolved misc item name (when Description == "Diverso")
+    public int? MiscRoll { get; init; }                  // secondary d100 roll used to pick the misc item
 }
