@@ -19,7 +19,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/treasure/{challengeRating}", (string challengeRating, TreasureRoller roller) =>
+app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
 {
     try
     {
