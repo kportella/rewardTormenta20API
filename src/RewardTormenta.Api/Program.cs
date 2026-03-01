@@ -51,6 +51,12 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
                 miscItemName = roller.RollMiscItem(roll)?.Name;
                 miscRoll = roll;
             }
+            else if (itemRow.ItemDescription == "Equipamento")
+            {
+                var (name, equipRoll) = roller.RollEquipment();
+                miscItemName = name;
+                miscRoll = equipRoll;
+            }
 
             item = new ItemResult
             {

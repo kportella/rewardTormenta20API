@@ -45,6 +45,25 @@ public class TreasureRoller
         return Lookup(Tables.EsotericItems, r, e => e.MinRoll, e => e.MaxRoll);
     }
 
+    /// <summary>
+    /// Picks a random equipment category via d6 (1–4 weapon, 5 armor, 6 esoteric),
+    /// then rolls d100 within that table. Returns the item name and the d100 roll used.
+    /// </summary>
+    public (string Name, int ItemRoll) RollEquipment()
+    {
+        int categoryRoll = RollD6();
+        int itemRoll     = RollD100();
+
+        string name = categoryRoll switch
+        {
+            <= 4 => RollWeapon(itemRoll)?.Name      ?? "—",
+            5    => RollArmor(itemRoll)?.Name        ?? "—",
+            _    => RollEsotericItem(itemRoll)?.Name ?? "—"
+        };
+
+        return (name, itemRoll);
+    }
+
     // ── Misc items ───────────────────────────────────────────────────────────
 
     public MiscItem? RollMiscItem(int? roll = null)
