@@ -26,10 +26,17 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
         var (moneyRow, itemRow, moneyRoll, itemRoll) = roller.RollTreasure(challengeRating);
 
         MoneyResult? money = null;
-        if (moneyRow is not null && moneyRow.MoneyDescription != "—")
+        if (moneyRow is not null)
         {
-            var (amount, currency) = roller.RollMoneyAmount(moneyRow.MoneyDescription);
-            money = new MoneyResult { Amount = amount, Currency = currency, Roll = moneyRoll };
+            if (moneyRow.MoneyDescription != "—")
+            {
+                var (amount, currency) = roller.RollMoneyAmount(moneyRow.MoneyDescription);
+                money = new MoneyResult { Amount = amount, Currency = currency, Roll = moneyRoll };
+            }
+            else
+            {
+                money = new MoneyResult { Amount = 0, Currency = "—", Roll = moneyRoll };
+            }
         }
 
         var result = new TreasureResult
