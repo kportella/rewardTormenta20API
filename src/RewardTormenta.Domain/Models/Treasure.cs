@@ -48,6 +48,14 @@ public class PotionResult
     public int Roll { get; init; }
 }
 
+public class EquipmentChoiceResult
+{
+    public int Die1 { get; init; }
+    public int Die2 { get; init; }
+    public required string Option1 { get; init; }
+    public required string Option2 { get; init; }
+}
+
 public class ItemResult
 {
     public required string Description { get; init; }   // e.g. "Diverso", "Superior (2 melhorias)"
@@ -57,4 +65,5 @@ public class ItemResult
     public string? Item { get; init; }                   // resolved misc item name (when Description == "Diverso")
     public int? MiscRoll { get; init; }                  // secondary d100 roll used to pick the misc item
     public List<PotionResult>? Potions { get; init; }    // resolved potions (when Description contains "poção")
+    public EquipmentChoiceResult? EquipmentChoices { get; init; } // 2d6 type options (when Description == "Equipamento" or "Mágico")
 }

@@ -46,23 +46,55 @@ public class TreasureRoller
     }
 
     /// <summary>
-    /// Picks a random equipment category via d6 (1–4 weapon, 5 armor, 6 esoteric),
-    /// then rolls d100 within that table. Returns the item name and the d100 roll used.
+    /// Rolls 2d6 for equipment category selection (1–4 arma, 5 armadura, 6 esotérico).
+    /// Returns both dice and their resolved type labels so the player can choose.
     /// </summary>
-    public (string Name, int ItemRoll) RollEquipment()
+    public EquipmentChoiceResult RollEquipment()
     {
-        int categoryRoll = RollD6();
-        int itemRoll     = RollD100();
-
-        string name = categoryRoll switch
+        int die1 = RollD6();
+        int die2 = RollD6();
+        return new EquipmentChoiceResult
         {
-            <= 4 => RollWeapon(itemRoll)?.Name      ?? "—",
-            5    => RollArmor(itemRoll)?.Name        ?? "—",
-            _    => RollEsotericItem(itemRoll)?.Name ?? "—"
+            Die1    = die1,
+            Die2    = die2,
+            Option1 = EquipmentTypeLabel(die1),
+            Option2 = EquipmentTypeLabel(die2)
         };
-
-        return (name, itemRoll);
     }
+
+    private static string EquipmentTypeLabel(int roll) => roll switch
+    {
+        <= 4 => "arma",
+        5    => "armadura",
+        _    => "esotérico"
+    };
+
+    /// <summary>
+    /// Rolls 2d6 for magic item type selection (1–2 arma, 3 armadura/escudo, 4 acessório menor,
+    /// 5 acessório médio, 6 acessório maior).
+    /// Returns both dice and their resolved type labels so the player can choose.
+    /// </summary>
+    public EquipmentChoiceResult RollMagicItem()
+    {
+        int die1 = RollD6();
+        int die2 = RollD6();
+        return new EquipmentChoiceResult
+        {
+            Die1    = die1,
+            Die2    = die2,
+            Option1 = MagicItemTypeLabel(die1),
+            Option2 = MagicItemTypeLabel(die2)
+        };
+    }
+
+    private static string MagicItemTypeLabel(int roll) => roll switch
+    {
+        <= 2 => "arma",
+        3    => "armadura/escudo",
+        4    => "acessório menor",
+        5    => "acessório médio",
+        _    => "acessório maior"
+    };
 
     // ── Misc items ───────────────────────────────────────────────────────────
 
