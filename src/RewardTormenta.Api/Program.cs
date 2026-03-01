@@ -1,9 +1,12 @@
+using RewardTormenta.Application;
+using RewardTormenta.Domain.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<TreasureRoller>();
 
 var app = builder.Build();
 
@@ -16,29 +19,47 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/treasure/{challengeRating}", (string challengeRating, TreasureRoller roller) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    try
+    {
+        var (moneyRow, itemRow, moneyRoll, itemRoll) = roller.RollTreasure(challengeRating);
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+        MoneyResult? money = null;
+        if (moneyRow is not null)
+        {
+            var (amount, currency) = roller.RollMoneyAmount(moneyRow.MoneyDescription);
+            money = new MoneyResult { Amount = amount, Currency = currency, Roll = moneyRoll };
+        }
+
+        var result = new TreasureResult
+        {
+            ChallengeRating = ParseChallengeRating(challengeRating),
+            Money = money,
+            Item = itemRow is not null ? new ItemResult
+            {
+                Description  = itemRow.ItemDescription,
+                HasRollBonus = itemRow.ItemHasRollBonus,
+                HasDualRoll  = itemRow.ItemHasDualRoll,
+                Roll         = itemRoll
+            } : null
+        };
+
+        return Results.Ok(result);
+    }
+    catch (ArgumentException ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
 })
-.WithName("GetWeatherForecast")
+.WithName("GenerateTreasure")
 .WithOpenApi();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+static int ParseChallengeRating(string cr) => cr switch
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+    "1/4" => 0,
+    "1/2" => 0,
+    _ => int.TryParse(cr, out var value) ? value : 0
+};

@@ -1,3 +1,6 @@
+using RewardTormenta.Domain.Models;
+using RewardTormenta.Infrastructure;
+
 namespace RewardTormenta.Application;
 
 /// <summary>
@@ -131,6 +134,87 @@ public class TreasureRoller
             .FirstOrDefault();
     }
 
+    // ── Money amount resolution ───────────────────────────────────────────────
+
+    /// <summary>
+    /// Parses a MoneyDescription string and returns the rolled amount + currency.
+    /// Handles direct dice expressions ("2d6x100 T$") and wealth-tier references
+    /// ("1d3+1 riquezas médias").
+    /// </summary>
+    public (int Amount, string Currency) RollMoneyAmount(string description)
+    {
+        if (description.Contains("riqueza"))
+            return RollWealthReference(description);
+
+        return RollDirectDice(description);
+    }
+
+    private (int Amount, string Currency) RollDirectDice(string description)
+    {
+        int lastSpace     = description.LastIndexOf(' ');
+        string currency   = description[(lastSpace + 1)..];
+        string expression = description[..lastSpace];
+        return (EvaluateDiceExpression(expression), currency);
+    }
+
+    private (int Amount, string Currency) RollWealthReference(string description)
+    {
+        string[] parts   = description.Split(' ');
+        string countExpr = parts[0];
+        string tierWord  = parts[^1];
+
+        TreasureTier tier = tierWord switch
+        {
+            "menor"  or "menores" => TreasureTier.Menor,
+            "média"  or "médias"  => TreasureTier.Média,
+            "maior"  or "maiores" => TreasureTier.Maior,
+            _ => throw new ArgumentException($"Unknown wealth tier: {tierWord}")
+        };
+
+        int count = countExpr.Contains('d')
+            ? EvaluateDiceExpression(countExpr)
+            : int.Parse(countExpr);
+
+        int total = 0;
+        for (int i = 0; i < count; i++)
+        {
+            var wealth = RollWealth(tier);
+            if (wealth is not null)
+                total += EvaluateDiceExpression(wealth.RollExpression);
+        }
+
+        return (total, "T$");
+    }
+
+    private int EvaluateDiceExpression(string expression)
+    {
+        int multiplier = 1;
+        int xIndex     = expression.IndexOf('x');
+        if (xIndex >= 0)
+        {
+            multiplier = int.Parse(expression[(xIndex + 1)..].Replace(".", ""));
+            expression = expression[..xIndex];
+        }
+
+        int bonus     = 0;
+        int plusIndex = expression.IndexOf('+');
+        if (plusIndex >= 0)
+        {
+            bonus      = int.Parse(expression[(plusIndex + 1)..]);
+            expression = expression[..plusIndex];
+        }
+
+        int dIndex  = expression.IndexOf('d');
+        int numDice = int.Parse(expression[..dIndex]);
+        int dieSize = int.Parse(expression[(dIndex + 1)..]);
+
+        int total = bonus;
+        for (int i = 0; i < numDice; i++)
+            total += _rng.Next(1, dieSize + 1);
+
+        return total * multiplier;
+    }
+
     // ── Treasure by challenge rating ─────────────────────────────────────────
 
     /// <summary>
@@ -138,7 +222,7 @@ public class TreasureRoller
     /// using two separate d100 rolls.
     /// </summary>
     /// <param name="challengeRating">e.g. "1/4", "1/2", "1", "2" … "20"</param>
-    public (TreasureRow? moneyRow, TreasureRow? itemRow) RollTreasure(string challengeRating)
+    public (TreasureRow? moneyRow, TreasureRow? itemRow, int moneyRoll, int itemRoll) RollTreasure(string challengeRating)
     {
         if (!TreasureByChallenge.Table.TryGetValue(challengeRating, out var rows))
             throw new ArgumentException($"Unknown challenge rating: {challengeRating}", nameof(challengeRating));
@@ -149,6 +233,6 @@ public class TreasureRoller
         var moneyRow = rows.FirstOrDefault(r => moneyRoll >= r.MinMoneyRoll && moneyRoll <= r.MaxMoneyRoll);
         var itemRow  = rows.FirstOrDefault(r => itemRoll  >= r.MinItemRoll  && itemRoll  <= r.MaxItemRoll);
 
-        return (moneyRow, itemRow);
+        return (moneyRow, itemRow, moneyRoll, itemRoll);
     }
 }

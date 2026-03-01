@@ -36,9 +36,9 @@ public class TreasureResult
 
 public class MoneyResult
 {
-    public required string Description { get; init; }   // e.g. "1d6x10 TC", "1 riqueza menor"
-    public int? MinRoll { get; init; }
-    public int? MaxRoll { get; init; }
+    public int Amount { get; init; }               // e.g. 650
+    public required string Currency { get; init; } // "TC", "T$", or "TO"
+    public int? Roll { get; init; }
 }
 
 public class ItemResult
@@ -46,6 +46,5 @@ public class ItemResult
     public required string Description { get; init; }   // e.g. "Diverso", "Superior (2 melhorias)"
     public bool HasRollBonus { get; init; }              // ⁺% modifier
     public bool HasDualRoll { get; init; }               // ²ᴰ modifier
-    public int? MinRoll { get; init; }
-    public int? MaxRoll { get; init; }
+    public int? Roll { get; init; }
 }
