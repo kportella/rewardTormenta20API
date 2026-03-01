@@ -173,7 +173,19 @@ public static class Tables
 
     public static readonly IReadOnlyList<SpecificArmor> SpecificArmors =
     [
-        // Tabela 8-11 — to be populated
+        new() { Name = "Cota élfica",          Price = 30_000,  MinRoll = 1,   MaxRoll = 10  },
+        new() { Name = "Couro de monstro",     Price = 36_000,  MinRoll = 11,  MaxRoll = 20  },
+        new() { Name = "Escudo do conjurador", Price = 45_000,  MinRoll = 21,  MaxRoll = 25  },
+        new() { Name = "Loriga do centurião",  Price = 45_000,  MinRoll = 26,  MaxRoll = 32  },
+        new() { Name = "Manto da noite",       Price = 45_000,  MinRoll = 33,  MaxRoll = 42  },
+        new() { Name = "Couraça do comando",   Price = 45_000,  MinRoll = 43,  MaxRoll = 49  },
+        new() { Name = "Baluarte anão",        Price = 50_000,  MinRoll = 50,  MaxRoll = 59  },
+        new() { Name = "Escudo espinhoso",     Price = 50_000,  MinRoll = 60,  MaxRoll = 66  },
+        new() { Name = "Escudo do leão",       Price = 50_000,  MinRoll = 67,  MaxRoll = 76  },
+        new() { Name = "Carapaça demoníaca",   Price = 63_000,  MinRoll = 77,  MaxRoll = 83  },
+        new() { Name = "Escudo do eclipse",    Price = 70_000,  MinRoll = 84,  MaxRoll = 88  },
+        new() { Name = "Escudo de Azgher",     Price = 140_000, MinRoll = 89,  MaxRoll = 93  },
+        new() { Name = "Armadura da luz",      Price = 150_000, MinRoll = 94,  MaxRoll = 100 },
     ];
 
     // ── Riquezas ─────────────────────────────────────────────────────────────
