@@ -55,11 +55,15 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
             }
             else if (itemRow.ItemDescription == "Equipamento")
             {
-                equipmentChoices = roller.RollEquipment();
+                equipmentChoices = roller.RollEquipment(itemRow.ItemHasDualRoll);
+            }
+            else if (itemRow.ItemDescription.StartsWith("Superior"))
+            {
+                equipmentChoices = roller.RollEquipment(itemRow.ItemHasDualRoll);
             }
             else if (itemRow.ItemDescription.StartsWith("Mágico"))
             {
-                equipmentChoices = roller.RollMagicItem();
+                equipmentChoices = roller.RollMagicItem(itemRow.ItemHasDualRoll);
             }
             else if (itemRow.ItemDescription.Contains("poção") || itemRow.ItemDescription.Contains("poções"))
             {

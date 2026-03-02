@@ -46,12 +46,22 @@ public class TreasureRoller
     }
 
     /// <summary>
-    /// Rolls 2d6 for equipment category selection (1–4 arma, 5 armadura, 6 esotérico).
-    /// Returns both dice and their resolved type labels so the player can choose.
+    /// Rolls for equipment category selection (1–4 arma, 5 armadura, 6 esotérico).
+    /// When <paramref name="dualRoll"/> is <see langword="true"/>, rolls 2d6 and returns two options
+    /// for the player to choose from. When <see langword="false"/>, rolls 1d6 and returns a single result.
     /// </summary>
-    public EquipmentChoiceResult RollEquipment()
+    public EquipmentChoiceResult RollEquipment(bool dualRoll = true)
     {
         int die1 = RollD6();
+        if (!dualRoll)
+            return new EquipmentChoiceResult
+            {
+                Die1    = die1,
+                Die2    = null,
+                Option1 = EquipmentTypeLabel(die1),
+                Option2 = null
+            };
+
         int die2 = RollD6();
         return new EquipmentChoiceResult
         {
@@ -70,13 +80,23 @@ public class TreasureRoller
     };
 
     /// <summary>
-    /// Rolls 2d6 for magic item type selection (1–2 arma, 3 armadura/escudo, 4 acessório menor,
+    /// Rolls for magic item type selection (1–2 arma, 3 armadura/escudo, 4 acessório menor,
     /// 5 acessório médio, 6 acessório maior).
-    /// Returns both dice and their resolved type labels so the player can choose.
+    /// When <paramref name="dualRoll"/> is <see langword="true"/>, rolls 2d6 and returns two options
+    /// for the player to choose from. When <see langword="false"/>, rolls 1d6 and returns a single result.
     /// </summary>
-    public EquipmentChoiceResult RollMagicItem()
+    public EquipmentChoiceResult RollMagicItem(bool dualRoll = true)
     {
         int die1 = RollD6();
+        if (!dualRoll)
+            return new EquipmentChoiceResult
+            {
+                Die1    = die1,
+                Die2    = null,
+                Option1 = MagicItemTypeLabel(die1),
+                Option2 = null
+            };
+
         int die2 = RollD6();
         return new EquipmentChoiceResult
         {

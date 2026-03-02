@@ -51,9 +51,9 @@ public class PotionResult
 public class EquipmentChoiceResult
 {
     public int Die1 { get; init; }
-    public int Die2 { get; init; }
+    public int? Die2 { get; init; }           // null when single-die roll
     public required string Option1 { get; init; }
-    public required string Option2 { get; init; }
+    public string? Option2 { get; init; }     // null when single-die roll
 }
 
 public class ItemResult
