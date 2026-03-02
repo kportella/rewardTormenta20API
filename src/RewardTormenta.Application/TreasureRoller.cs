@@ -74,8 +74,9 @@ public class TreasureRoller
 
     private static string EquipmentTypeLabel(int roll) => roll switch
     {
-        <= 4 => "arma",
-        5    => "armadura",
+        <= 3 => "arma",
+        4    => "armadura",
+        5    => "escudo",
         _    => "esotérico"
     };
 
