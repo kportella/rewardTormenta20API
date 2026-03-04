@@ -1,5 +1,4 @@
 [build]
-builder = "nixpacks"
 buildCommand = "dotnet publish src/RewardTormenta.Api -c Release -o out"
 
 [deploy]
