@@ -1,2 +1,6 @@
+[build]
+builder = "nixpacks"
+buildCommand = "dotnet publish src/RewardTormenta.Api -c Release -o out"
+
 [deploy]
-startCommand = "dotnet run --project src/RewardTormenta.Api --urls http://0.0.0.0:$PORT"
+startCommand = "dotnet out/RewardTormenta.Api.dll --urls http://0.0.0.0:$PORT"
