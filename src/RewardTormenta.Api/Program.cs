@@ -130,26 +130,21 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
 .WithName("GenerateTreasure")
 .WithOpenApi();
 
-app.MapGet("/roll/accessory", (string tier, TreasureRoller roller) =>
+app.MapGet("/roll/magicItem", (string type, string tier, TreasureRoller roller) =>
 {
-    if (!Enum.TryParse<MagicItemTier>(tier, ignoreCase: true, out var magicTier))
+    if (!Enum.TryParse<MagicItemTier>(tier, ignoreCase: true, out var magicTier) || int.TryParse(tier, out _))
         return Results.BadRequest(new { error = $"Unknown tier '{tier}'. Use Menor, Médio, or Maior." });
 
-    int roll = roller.RollD100();
-    var accessory = roller.RollAccessory(magicTier, roll);
+    var validTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        { "arma", "armadura/escudo", "acessório menor", "acessório médio", "acessório maior" };
 
-    if (accessory is null)
-        return Results.Problem("No accessory matched the roll — check table data.");
+    if (!validTypes.Contains(type))
+        return Results.BadRequest(new { error = $"Unknown type '{type}'. Valid values: arma, armadura/escudo, acessório menor, acessório médio, acessório maior." });
 
-    return Results.Ok(new
-    {
-        tier     = accessory.Tier.ToString(),
-        name     = accessory.Name,
-        price    = accessory.Price,
-        roll
-    });
+    var resolved = roller.RollMagicItemByType(type, magicTier);
+    return Results.Ok(resolved);
 })
-.WithName("RollAccessory")
+.WithName("RollMagicItem")
 .WithOpenApi();
 
 app.Run();

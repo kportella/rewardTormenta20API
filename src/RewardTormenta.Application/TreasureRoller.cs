@@ -394,13 +394,23 @@ public class TreasureRoller
     // ── Magic item full resolution ────────────────────────────────────────────
 
     /// <summary>
-    /// Fully resolves a Mágico item: rolls type (1d6), then resolves enchantments
-    /// or a specific item based on the tier slot count (Menor=1, Médio=2, Maior=3).
+    /// Fully resolves a Mágico item: rolls type (1d6), then delegates to
+    /// <see cref="RollMagicItemByType"/> with the rolled die value.
     /// </summary>
     public ResolvedMagicItem RollMagicItemFull(MagicItemTier tier)
     {
-        int die     = RollD6();
-        string type  = MagicItemTypeLabel(die);
+        int die    = RollD6();
+        string type = MagicItemTypeLabel(die);
+        return RollMagicItemByType(type, tier, typeRoll: die);
+    }
+
+    /// <summary>
+    /// Resolves a magic item for the given <paramref name="type"/> string and tier.
+    /// <paramref name="typeRoll"/> is the d6 value that produced the type (0 when user-chosen).
+    /// Valid type values: "arma", "armadura/escudo", "acessório menor", "acessório médio", "acessório maior".
+    /// </summary>
+    public ResolvedMagicItem RollMagicItemByType(string type, MagicItemTier tier, int typeRoll = 0)
+    {
         bool isMinor = tier is MagicItemTier.Menor;
         int slots    = tier switch
         {
@@ -421,7 +431,7 @@ public class TreasureRoller
                     return new ResolvedMagicItem
                     {
                         Type             = "arma-específica",
-                        TypeRoll         = die,
+                        TypeRoll         = typeRoll,
                         EnchantmentRolls = [firstRoll],
                         ItemRoll         = itemRoll,
                         SpecificWeapon   = RollSpecificWeapon(itemRoll)
@@ -449,7 +459,7 @@ public class TreasureRoller
                 return new ResolvedMagicItem
                 {
                     Type             = "arma",
-                    TypeRoll         = die,
+                    TypeRoll         = typeRoll,
                     EnchantmentRolls = enchantmentRolls,
                     Weapon           = new MagicWeapon
                     {
@@ -474,7 +484,7 @@ public class TreasureRoller
                     return new ResolvedMagicItem
                     {
                         Type             = "armadura-específica",
-                        TypeRoll         = die,
+                        TypeRoll         = typeRoll,
                         EnchantmentRolls = [firstRoll],
                         ItemRoll         = itemRoll,
                         SpecificArmor    = RollSpecificArmor(itemRoll)
@@ -497,7 +507,7 @@ public class TreasureRoller
                 return new ResolvedMagicItem
                 {
                     Type             = isShield ? "escudo" : "armadura",
-                    TypeRoll         = die,
+                    TypeRoll         = typeRoll,
                     EnchantmentRolls = enchantmentRolls,
                     Armor            = new MagicArmor
                     {
@@ -522,7 +532,7 @@ public class TreasureRoller
                 return new ResolvedMagicItem
                 {
                     Type      = "acessório",
-                    TypeRoll  = die,
+                    TypeRoll  = typeRoll,
                     ItemRoll  = itemRoll,
                     Accessory = RollAccessory(accessoryTier, itemRoll)
                 };
