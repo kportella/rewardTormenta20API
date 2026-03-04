@@ -22,105 +22,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
+app.MapGet("/treasure", (string[] challengeRating, TreasureRoller roller) =>
 {
+    if (challengeRating.Length == 0)
+        return Results.BadRequest(new { error = "At least one challengeRating is required." });
+
     try
     {
-        var (moneyRow, itemRow, moneyRoll, itemRoll) = roller.RollTreasure(challengeRating);
-
-        MoneyResult? money = null;
-        if (moneyRow is not null)
-        {
-            if (moneyRow.MoneyDescription != "—")
-            {
-                var (amount, currency) = roller.RollMoneyAmount(moneyRow.MoneyDescription);
-                money = new MoneyResult { Amount = amount, Currency = currency, Roll = moneyRoll };
-            }
-            else
-            {
-                money = new MoneyResult { Amount = 0, Currency = "—", Roll = moneyRoll };
-            }
-        }
-
-        ItemResult? item = null;
-        if (itemRow is not null)
-        {
-            string? miscItemName = null;
-            int? miscRoll = null;
-            List<PotionResult>? potions = null;
-            EquipmentChoiceResult? equipmentChoices = null;
-            SuperiorItem? resolvedSuperiorItem = null;
-            ResolvedMagicItem? resolvedMagicItem = null;
-
-            if (itemRow.ItemDescription == "Diverso")
-            {
-                int roll = roller.RollD100();
-                miscItemName = roller.RollMiscItem(roll)?.Name;
-                miscRoll = roll;
-            }
-            else if (itemRow.ItemDescription == "Equipamento")
-            {
-                equipmentChoices = roller.RollEquipment(itemRow.ItemHasDualRoll);
-            }
-            else if (itemRow.ItemDescription.StartsWith("Superior"))
-            {
-                if (!itemRow.ItemHasDualRoll)
-                {
-                    int slots = ParseImprovementSlots(itemRow.ItemDescription);
-                    resolvedSuperiorItem = roller.RollSuperiorItem(slots);
-                }
-                else
-                {
-                    equipmentChoices = roller.RollEquipment(dualRoll: true);
-                }
-            }
-            else if (itemRow.ItemDescription.StartsWith("Mágico"))
-            {
-                if (!itemRow.ItemHasDualRoll)
-                {
-                    var magicTier = ParseMagicItemTier(itemRow.ItemDescription);
-                    resolvedMagicItem = roller.RollMagicItemFull(magicTier);
-                }
-                else
-                {
-                    equipmentChoices = roller.RollMagicItem(dualRoll: true);
-                }
-            }
-            else if (itemRow.ItemDescription.Contains("poção") || itemRow.ItemDescription.Contains("poções"))
-            {
-                potions = roller.RollPotions(itemRow.ItemDescription)
-                    .Select(t => new PotionResult
-                    {
-                        Name  = t.Potion.Name,
-                        Price = t.Potion.Price,
-                        Roll  = t.Roll
-                    })
-                    .ToList();
-            }
-
-            item = new ItemResult
-            {
-                Description          = itemRow.ItemDescription,
-                HasRollBonus         = itemRow.ItemHasRollBonus,
-                HasDualRoll          = itemRow.ItemHasDualRoll,
-                Roll                 = itemRoll,
-                Item                 = miscItemName,
-                MiscRoll             = miscRoll,
-                Potions              = potions,
-                EquipmentChoices     = equipmentChoices,
-                ResolvedSuperiorItem = resolvedSuperiorItem,
-                ResolvedMagicItem    = resolvedMagicItem
-            };
-        }
-
-        var result = new TreasureResult
-        {
-            ChallengeRating = ParseChallengeRating(challengeRating),
-            Money = money,
-            Item  = item
-        };
-
-        return Results.Ok(result);
+        var results = challengeRating
+            .Select(cr => BuildTreasureResult(cr, roller))
+            .ToList();
+        return Results.Ok(results);
     }
     catch (ArgumentException ex)
     {
@@ -165,6 +77,103 @@ app.MapGet("/roll/equipment", (string type, int improvements, TreasureRoller rol
 .WithOpenApi();
 
 app.Run();
+
+static TreasureResult BuildTreasureResult(string challengeRating, TreasureRoller roller)
+{
+    var (moneyRow, itemRow, moneyRoll, itemRoll) = roller.RollTreasure(challengeRating);
+
+    MoneyResult? money = null;
+    if (moneyRow is not null)
+    {
+        if (moneyRow.MoneyDescription != "—")
+        {
+            var (amount, currency) = roller.RollMoneyAmount(moneyRow.MoneyDescription);
+            money = new MoneyResult { Amount = amount, Currency = currency, Roll = moneyRoll };
+        }
+        else
+        {
+            money = new MoneyResult { Amount = 0, Currency = "—", Roll = moneyRoll };
+        }
+    }
+
+    ItemResult? item = null;
+    if (itemRow is not null)
+    {
+        string? miscItemName = null;
+        int? miscRoll = null;
+        List<PotionResult>? potions = null;
+        EquipmentChoiceResult? equipmentChoices = null;
+        SuperiorItem? resolvedSuperiorItem = null;
+        ResolvedMagicItem? resolvedMagicItem = null;
+
+        if (itemRow.ItemDescription == "Diverso")
+        {
+            int roll = roller.RollD100();
+            miscItemName = roller.RollMiscItem(roll)?.Name;
+            miscRoll = roll;
+        }
+        else if (itemRow.ItemDescription == "Equipamento")
+        {
+            equipmentChoices = roller.RollEquipment(itemRow.ItemHasDualRoll);
+        }
+        else if (itemRow.ItemDescription.StartsWith("Superior"))
+        {
+            if (!itemRow.ItemHasDualRoll)
+            {
+                int slots = ParseImprovementSlots(itemRow.ItemDescription);
+                resolvedSuperiorItem = roller.RollSuperiorItem(slots);
+            }
+            else
+            {
+                equipmentChoices = roller.RollEquipment(dualRoll: true);
+            }
+        }
+        else if (itemRow.ItemDescription.StartsWith("Mágico"))
+        {
+            if (!itemRow.ItemHasDualRoll)
+            {
+                var magicTier = ParseMagicItemTier(itemRow.ItemDescription);
+                resolvedMagicItem = roller.RollMagicItemFull(magicTier);
+            }
+            else
+            {
+                equipmentChoices = roller.RollMagicItem(dualRoll: true);
+            }
+        }
+        else if (itemRow.ItemDescription.Contains("poção") || itemRow.ItemDescription.Contains("poções"))
+        {
+            potions = roller.RollPotions(itemRow.ItemDescription)
+                .Select(t => new PotionResult
+                {
+                    Name  = t.Potion.Name,
+                    Price = t.Potion.Price,
+                    Roll  = t.Roll
+                })
+                .ToList();
+        }
+
+        item = new ItemResult
+        {
+            Description          = itemRow.ItemDescription,
+            HasRollBonus         = itemRow.ItemHasRollBonus,
+            HasDualRoll          = itemRow.ItemHasDualRoll,
+            Roll                 = itemRoll,
+            Item                 = miscItemName,
+            MiscRoll             = miscRoll,
+            Potions              = potions,
+            EquipmentChoices     = equipmentChoices,
+            ResolvedSuperiorItem = resolvedSuperiorItem,
+            ResolvedMagicItem    = resolvedMagicItem
+        };
+    }
+
+    return new TreasureResult
+    {
+        ChallengeRating = ParseChallengeRating(challengeRating),
+        Money = money,
+        Item  = item
+    };
+}
 
 static MagicItemTier ParseMagicItemTier(string description)
 {
