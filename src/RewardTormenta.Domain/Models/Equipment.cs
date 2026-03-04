@@ -122,3 +122,21 @@ public class Accessory
     public int MinRoll { get; init; }
     public int MaxRoll { get; init; }
 }
+
+/// <summary>
+/// Wraps the fully-resolved result of a Mágico item roll.
+/// Exactly one of the item fields will be non-null, indicated by <see cref="Type"/>.
+/// Type values: "arma", "arma-específica", "armadura", "escudo", "armadura-específica", "acessório".
+/// </summary>
+public class ResolvedMagicItem
+{
+    public required string Type { get; init; }
+    public int             TypeRoll         { get; init; }    // d6 roll that determined the type
+    public List<int>       EnchantmentRolls { get; init; } = []; // d100 roll(s) for each enchantment
+    public int?            ItemRoll         { get; init; }    // d100 roll for specific weapon/armor or accessory
+    public MagicWeapon?    Weapon         { get; init; }
+    public SpecificWeapon? SpecificWeapon { get; init; }
+    public MagicArmor?     Armor          { get; init; }
+    public SpecificArmor?  SpecificArmor  { get; init; }
+    public Accessory?      Accessory      { get; init; }
+}

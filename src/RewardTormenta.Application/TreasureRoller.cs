@@ -276,6 +276,14 @@ public class TreasureRoller
         return Lookup(Tables.SpecificWeapons, r, w => w.MinRoll, w => w.MaxRoll);
     }
 
+    // ── Specific magic armors ────────────────────────────────────────────────
+
+    public SpecificArmor? RollSpecificArmor(int? roll = null)
+    {
+        int r = roll ?? RollD100();
+        return Lookup(Tables.SpecificArmors, r, a => a.MinRoll, a => a.MaxRoll);
+    }
+
     // ── Weapon enchantment ───────────────────────────────────────────────────
 
     /// <summary>
@@ -283,7 +291,7 @@ public class TreasureRoller
     /// Re-rolls Energética, Lancinante, and Magnífica when called for minor items,
     /// as per the footnote in Armas_Mágicas.md.
     /// </summary>
-    public WeaponEnchantment RollWeaponEnchantment(bool isMinorItem = false)
+    public (WeaponEnchantment Enchantment, int Roll) RollWeaponEnchantment(bool isMinorItem = false)
     {
         while (true)
         {
@@ -327,7 +335,7 @@ public class TreasureRoller
                                            or WeaponEnchantment.Magnífica)
                 continue;
 
-            return enchantment;
+            return (enchantment, r);
         }
     }
 
@@ -338,7 +346,7 @@ public class TreasureRoller
     /// Re-rolls Guardião for minor items (footnote ²).
     /// Re-rolls Animado and Esmagador for non-shield armors (footnote ¹).
     /// </summary>
-    public ArmorEnchantment RollArmorEnchantment(bool isMinorItem = false, bool isShield = false)
+    public (ArmorEnchantment Enchantment, int Roll) RollArmorEnchantment(bool isMinorItem = false, bool isShield = false)
     {
         while (true)
         {
@@ -379,7 +387,146 @@ public class TreasureRoller
             if (!isShield && enchantment is ArmorEnchantment.Animado or ArmorEnchantment.Esmagador)
                 continue;
 
-            return enchantment;
+            return (enchantment, r);
+        }
+    }
+
+    // ── Magic item full resolution ────────────────────────────────────────────
+
+    /// <summary>
+    /// Fully resolves a Mágico item: rolls type (1d6), then resolves enchantments
+    /// or a specific item based on the tier slot count (Menor=1, Médio=2, Maior=3).
+    /// </summary>
+    public ResolvedMagicItem RollMagicItemFull(MagicItemTier tier)
+    {
+        int die     = RollD6();
+        string type  = MagicItemTypeLabel(die);
+        bool isMinor = tier is MagicItemTier.Menor;
+        int slots    = tier switch
+        {
+            MagicItemTier.Menor => 1,
+            MagicItemTier.Médio => 2,
+            _                   => 3  // Maior
+        };
+
+        switch (type)
+        {
+            case "arma":
+            {
+                // First roll determines the path: specific weapon OR enchanted weapon
+                var (firstEnch, firstRoll) = RollWeaponEnchantment(isMinor);
+                if (firstEnch is WeaponEnchantment.ArmaEspecífica)
+                {
+                    int itemRoll = RollD100();
+                    return new ResolvedMagicItem
+                    {
+                        Type             = "arma-específica",
+                        TypeRoll         = die,
+                        EnchantmentRolls = [firstRoll],
+                        ItemRoll         = itemRoll,
+                        SpecificWeapon   = RollSpecificWeapon(itemRoll)
+                    };
+                }
+
+                // Enchanted weapon — fill remaining slots (re-roll ArmaEspecífica)
+                var enchantments     = new List<WeaponEnchantment> { firstEnch };
+                var enchantmentRolls = new List<int> { firstRoll };
+                int slotsUsed        = firstEnch is WeaponEnchantment.Energética
+                                                  or WeaponEnchantment.Lancinante
+                                                  or WeaponEnchantment.Magnífica ? 2 : 1;
+
+                while (slotsUsed < slots)
+                {
+                    var (enc, encRoll) = RollWeaponEnchantment(isMinor);
+                    if (enc is WeaponEnchantment.ArmaEspecífica) continue;
+                    enchantments.Add(enc);
+                    enchantmentRolls.Add(encRoll);
+                    slotsUsed += enc is WeaponEnchantment.Energética
+                                       or WeaponEnchantment.Lancinante
+                                       or WeaponEnchantment.Magnífica ? 2 : 1;
+                }
+
+                return new ResolvedMagicItem
+                {
+                    Type             = "arma",
+                    TypeRoll         = die,
+                    EnchantmentRolls = enchantmentRolls,
+                    Weapon           = new MagicWeapon
+                    {
+                        BaseWeaponName = RollWeapon()?.Name ?? "Desconhecida",
+                        Enchantments   = enchantments,
+                        Tier           = tier
+                    }
+                };
+            }
+
+            case "armadura/escudo":
+            {
+                // Roll base item first to determine if it's a shield
+                var baseArmor = RollArmor();
+                bool isShield = baseArmor?.Name.Contains("Escudo") ?? false;
+
+                // First roll determines the path: specific armor OR enchanted armor/shield
+                var (firstEnch, firstRoll) = RollArmorEnchantment(isMinor, isShield);
+                if (firstEnch is ArmorEnchantment.ItemEspecífico)
+                {
+                    int itemRoll = RollD100();
+                    return new ResolvedMagicItem
+                    {
+                        Type             = "armadura-específica",
+                        TypeRoll         = die,
+                        EnchantmentRolls = [firstRoll],
+                        ItemRoll         = itemRoll,
+                        SpecificArmor    = RollSpecificArmor(itemRoll)
+                    };
+                }
+
+                var enchantments     = new List<ArmorEnchantment> { firstEnch };
+                var enchantmentRolls = new List<int> { firstRoll };
+                int slotsUsed        = firstEnch is ArmorEnchantment.Guardião ? 2 : 1;
+
+                while (slotsUsed < slots)
+                {
+                    var (enc, encRoll) = RollArmorEnchantment(isMinor, isShield);
+                    if (enc is ArmorEnchantment.ItemEspecífico) continue;
+                    enchantments.Add(enc);
+                    enchantmentRolls.Add(encRoll);
+                    slotsUsed += enc is ArmorEnchantment.Guardião ? 2 : 1;
+                }
+
+                return new ResolvedMagicItem
+                {
+                    Type             = isShield ? "escudo" : "armadura",
+                    TypeRoll         = die,
+                    EnchantmentRolls = enchantmentRolls,
+                    Armor            = new MagicArmor
+                    {
+                        BaseArmorName = baseArmor?.Name ?? "Desconhecida",
+                        Enchantments  = enchantments,
+                        Tier          = tier
+                    }
+                };
+            }
+
+            case "acessório menor":
+            case "acessório médio":
+            default: // "acessório maior"
+            {
+                var accessoryTier = type switch
+                {
+                    "acessório menor" => MagicItemTier.Menor,
+                    "acessório médio" => MagicItemTier.Médio,
+                    _                 => MagicItemTier.Maior
+                };
+                int itemRoll = RollD100();
+                return new ResolvedMagicItem
+                {
+                    Type      = "acessório",
+                    TypeRoll  = die,
+                    ItemRoll  = itemRoll,
+                    Accessory = RollAccessory(accessoryTier, itemRoll)
+                };
+            }
         }
     }
 

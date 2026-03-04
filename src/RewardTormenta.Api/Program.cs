@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using RewardTormenta.Application;
 using RewardTormenta.Domain.Models;
 
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<TreasureRoller>();
+builder.Services.ConfigureHttpJsonOptions(o =>
+    o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 var app = builder.Build();
 
@@ -47,6 +50,7 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
             List<PotionResult>? potions = null;
             EquipmentChoiceResult? equipmentChoices = null;
             SuperiorItem? resolvedSuperiorItem = null;
+            ResolvedMagicItem? resolvedMagicItem = null;
 
             if (itemRow.ItemDescription == "Diverso")
             {
@@ -72,7 +76,15 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
             }
             else if (itemRow.ItemDescription.StartsWith("Mágico"))
             {
-                equipmentChoices = roller.RollMagicItem(itemRow.ItemHasDualRoll);
+                if (!itemRow.ItemHasDualRoll)
+                {
+                    var magicTier = ParseMagicItemTier(itemRow.ItemDescription);
+                    resolvedMagicItem = roller.RollMagicItemFull(magicTier);
+                }
+                else
+                {
+                    equipmentChoices = roller.RollMagicItem(dualRoll: true);
+                }
             }
             else if (itemRow.ItemDescription.Contains("poção") || itemRow.ItemDescription.Contains("poções"))
             {
@@ -96,7 +108,8 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
                 MiscRoll             = miscRoll,
                 Potions              = potions,
                 EquipmentChoices     = equipmentChoices,
-                ResolvedSuperiorItem = resolvedSuperiorItem
+                ResolvedSuperiorItem = resolvedSuperiorItem,
+                ResolvedMagicItem    = resolvedMagicItem
             };
         }
 
@@ -140,6 +153,14 @@ app.MapGet("/roll/accessory", (string tier, TreasureRoller roller) =>
 .WithOpenApi();
 
 app.Run();
+
+static MagicItemTier ParseMagicItemTier(string description)
+{
+    // "Mágico (menor)" → Menor, "Mágico (médio)" → Médio, "Mágico (maior)" → Maior
+    if (description.Contains("menor")) return MagicItemTier.Menor;
+    if (description.Contains("médio")) return MagicItemTier.Médio;
+    return MagicItemTier.Maior;
+}
 
 static int ParseImprovementSlots(string description)
 {

@@ -67,4 +67,5 @@ public class ItemResult
     public List<PotionResult>? Potions { get; init; }    // resolved potions (when Description contains "poção")
     public EquipmentChoiceResult? EquipmentChoices { get; init; } // 2d6 type options (when Description == "Equipamento" or "Mágico")
     public SuperiorItem? ResolvedSuperiorItem { get; init; }      // fully resolved item (when Description starts with "Superior" and HasDualRoll == false)
+    public ResolvedMagicItem? ResolvedMagicItem { get; init; }   // fully resolved item (when Description starts with "Mágico" and HasDualRoll == false)
 }
