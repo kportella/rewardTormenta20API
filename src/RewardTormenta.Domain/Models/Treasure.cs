@@ -66,4 +66,5 @@ public class ItemResult
     public int? MiscRoll { get; init; }                  // secondary d100 roll used to pick the misc item
     public List<PotionResult>? Potions { get; init; }    // resolved potions (when Description contains "poção")
     public EquipmentChoiceResult? EquipmentChoices { get; init; } // 2d6 type options (when Description == "Equipamento" or "Mágico")
+    public SuperiorItem? ResolvedSuperiorItem { get; init; }      // fully resolved item (when Description starts with "Superior" and HasDualRoll == false)
 }

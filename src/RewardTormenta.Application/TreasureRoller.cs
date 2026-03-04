@@ -117,6 +117,109 @@ public class TreasureRoller
         _    => "acessório maior"
     };
 
+    // ── Superior item improvements ────────────────────────────────────────────
+
+    private WeaponImprovement RollWeaponImprovement()
+    {
+        var values = Enum.GetValues<WeaponImprovement>();
+        return values[_rng.Next(values.Length)];
+    }
+
+    private ArmorImprovement RollArmorImprovement()
+    {
+        var values = Enum.GetValues<ArmorImprovement>();
+        return values[_rng.Next(values.Length)];
+    }
+
+    private EsotericImprovement RollEsotericImprovement()
+    {
+        var values = Enum.GetValues<EsotericImprovement>();
+        return values[_rng.Next(values.Length)];
+    }
+
+    /// <summary>
+    /// Fully resolves a Superior item: rolls equipment type (1d6), base item (d100),
+    /// and improvements until <paramref name="slots"/> are filled.
+    /// Double-slot improvements (Atroz/Pungente for weapons, SobMedida for armor) may exceed
+    /// the slot budget by 1 — this is intentional.
+    /// </summary>
+    public SuperiorItem RollSuperiorItem(int slots)
+    {
+        // 1. Roll equipment type
+        int die    = RollD6();
+        string type = EquipmentTypeLabel(die); // "arma" | "armadura" | "escudo" | "esotérico"
+
+        // 2. Roll base item
+        string baseItemName;
+        string baseItemType;
+        switch (type)
+        {
+            case "arma":
+                baseItemName = RollWeapon()?.Name ?? "Desconhecida";
+                baseItemType = "Arma";
+                break;
+            case "armadura":
+                baseItemName = RollArmor()?.Name ?? "Desconhecida";
+                baseItemType = "Armadura";
+                break;
+            case "escudo":
+                baseItemName = RollArmor()?.Name ?? "Desconhecida";
+                baseItemType = "Escudo";
+                break;
+            default: // "esotérico"
+                baseItemName = RollEsotericItem()?.Name ?? "Desconhecida";
+                baseItemType = "Esotérico";
+                break;
+        }
+
+        // 3. Roll improvements until slots are filled
+        var improvements         = new List<string>();
+        SpecialMaterial? material = null;
+        int slotsUsed            = 0;
+
+        while (slotsUsed < slots)
+        {
+            switch (type)
+            {
+                case "arma":
+                {
+                    var imp = RollWeaponImprovement();
+                    improvements.Add(imp.ToString());
+                    if (imp is WeaponImprovement.MaterialEspecial)
+                        material = RollSpecialMaterial();
+                    slotsUsed += imp is WeaponImprovement.Atroz or WeaponImprovement.Pungente ? 2 : 1;
+                    break;
+                }
+                case "armadura" or "escudo":
+                {
+                    var imp = RollArmorImprovement();
+                    improvements.Add(imp.ToString());
+                    if (imp is ArmorImprovement.MaterialEspecial)
+                        material = RollSpecialMaterial();
+                    slotsUsed += imp is ArmorImprovement.SobMedida ? 2 : 1;
+                    break;
+                }
+                default: // "esotérico"
+                {
+                    var imp = RollEsotericImprovement();
+                    improvements.Add(imp.ToString());
+                    if (imp is EsotericImprovement.MaterialEspecial)
+                        material = RollSpecialMaterial();
+                    slotsUsed += 1;
+                    break;
+                }
+            }
+        }
+
+        return new SuperiorItem
+        {
+            BaseItemName    = baseItemName,
+            BaseItemType    = baseItemType,
+            Improvements    = improvements,
+            SpecialMaterial = material
+        };
+    }
+
     // ── Misc items ───────────────────────────────────────────────────────────
 
     public MiscItem? RollMiscItem(int? roll = null)

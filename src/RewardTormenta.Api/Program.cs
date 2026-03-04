@@ -46,6 +46,7 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
             int? miscRoll = null;
             List<PotionResult>? potions = null;
             EquipmentChoiceResult? equipmentChoices = null;
+            SuperiorItem? resolvedSuperiorItem = null;
 
             if (itemRow.ItemDescription == "Diverso")
             {
@@ -59,7 +60,15 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
             }
             else if (itemRow.ItemDescription.StartsWith("Superior"))
             {
-                equipmentChoices = roller.RollEquipment(itemRow.ItemHasDualRoll);
+                if (!itemRow.ItemHasDualRoll)
+                {
+                    int slots = ParseImprovementSlots(itemRow.ItemDescription);
+                    resolvedSuperiorItem = roller.RollSuperiorItem(slots);
+                }
+                else
+                {
+                    equipmentChoices = roller.RollEquipment(dualRoll: true);
+                }
             }
             else if (itemRow.ItemDescription.StartsWith("Mágico"))
             {
@@ -79,14 +88,15 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
 
             item = new ItemResult
             {
-                Description      = itemRow.ItemDescription,
-                HasRollBonus     = itemRow.ItemHasRollBonus,
-                HasDualRoll      = itemRow.ItemHasDualRoll,
-                Roll             = itemRoll,
-                Item             = miscItemName,
-                MiscRoll         = miscRoll,
-                Potions          = potions,
-                EquipmentChoices = equipmentChoices
+                Description          = itemRow.ItemDescription,
+                HasRollBonus         = itemRow.ItemHasRollBonus,
+                HasDualRoll          = itemRow.ItemHasDualRoll,
+                Roll                 = itemRoll,
+                Item                 = miscItemName,
+                MiscRoll             = miscRoll,
+                Potions              = potions,
+                EquipmentChoices     = equipmentChoices,
+                ResolvedSuperiorItem = resolvedSuperiorItem
             };
         }
 
@@ -130,6 +140,14 @@ app.MapGet("/roll/accessory", (string tier, TreasureRoller roller) =>
 .WithOpenApi();
 
 app.Run();
+
+static int ParseImprovementSlots(string description)
+{
+    // Input: "Superior (2 melhorias)" or "Superior (1 melhoria)"
+    int open  = description.IndexOf('(') + 1;
+    int space = description.IndexOf(' ', open);
+    return int.Parse(description[open..space]);
+}
 
 static int ParseChallengeRating(string cr) => cr switch
 {
