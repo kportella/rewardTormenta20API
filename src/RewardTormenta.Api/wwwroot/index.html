@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tesouro – Tormenta 20</title>
+  <style>
+    :root {
+      --bg:      #111827;
+      --surface: #1f2937;
+      --border:  #374151;
+      --accent:  #d97706;
+      --text:    #f3f4f6;
+      --muted:   #9ca3af;
+      --gold:    #fbbf24;
+      --silver:  #d1d5db;
+      --copper:  #cd7f32;
+      --purple:  #a78bfa;
+      --green:   #34d399;
+      --error:   #f87171;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+      line-height: 1.6;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────────────── */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    header h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    header p {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    /* ── Setup ───────────────────────────────────────────────────────────── */
+    .setup {
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .setup-label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .cr-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      margin-bottom: 1rem;
+    }
+    .cr-btn {
+      padding: 0.3125rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      transition: border-color 0.1s, color 0.1s, background 0.1s;
+    }
+    .cr-btn:hover { border-color: var(--accent); color: var(--text); }
+    .cr-btn.on {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #111;
+      font-weight: 700;
+    }
+    .actions {
+      display: flex;
+      gap: 0.625rem;
+    }
+    .btn-primary {
+      flex: 1;
+      padding: 0.6875rem 1.25rem;
+      background: var(--accent);
+      color: #111;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-primary:hover:not(:disabled) { background: #f59e0b; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-ghost {
+      padding: 0.6875rem 1rem;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .btn-ghost:hover { color: var(--error); border-color: var(--error); }
+
+    /* ── Error ───────────────────────────────────────────────────────────── */
+    #error-msg {
+      max-width: 600px;
+      margin: 0 auto 1rem;
+      padding: 0.625rem 0.875rem;
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid var(--error);
+      border-radius: 6px;
+      color: var(--error);
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    /* ── Result cards ────────────────────────────────────────────────────── */
+    #results {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 0.625rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .card-head h2 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .card-section {
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .card-section + .card-section {
+      border-top: 1px solid var(--border);
+    }
+    .section-icon {
+      font-size: 1.125rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .section-body { flex: 1; min-width: 0; }
+    .section-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .section-value {
+      font-size: 0.9375rem;
+      font-weight: 500;
+    }
+    .section-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .none { color: var(--muted); font-style: italic; font-size: 0.875rem; }
+
+    /* Currency */
+    .tc { color: var(--copper); font-weight: 700; }
+    .ts { color: var(--silver); font-weight: 700; }
+    .to { color: var(--gold);   font-weight: 700; }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.1rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-left: 0.375rem;
+      vertical-align: middle;
+    }
+    .badge-dual  { background: rgba(167,139,250,0.15); color: var(--purple); }
+    .badge-bonus { background: rgba(52,211,153,0.15);  color: var(--green);  }
+
+    /* Potions */
+    .potions {
+      margin-top: 0.375rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .potion-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+    .potion-row span { color: var(--muted); font-size: 0.8rem; }
+
+    /* Item detail box */
+    .item-box {
+      margin-top: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      background: rgba(255,255,255,0.04);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+    }
+    .item-box .iname { font-weight: 600; color: var(--gold); }
+    .item-box .isub  { font-size: 0.8rem; color: var(--muted); margin-top: 0.125rem; }
+    .item-box .ienc  { font-size: 0.875rem; color: var(--purple); margin-top: 0.25rem; }
+    .item-box .iprice { font-size: 0.8rem; color: var(--gold); margin-top: 0.25rem; }
+    .item-box .imat  { font-size: 0.8rem; color: var(--copper); margin-top: 0.25rem; }
+    .item-box .iimpr { font-size: 0.875rem; color: var(--green); margin-top: 0.25rem; }
+
+    /* Choice UI */
+    .choices { margin-top: 0.625rem; }
+    .choices-hint { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .choice-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.625rem; }
+    .choice-opt {
+      padding: 0.375rem 0.875rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      text-align: left;
+      transition: border-color 0.1s, background 0.1s, color 0.1s;
+    }
+    .choice-opt:hover:not(:disabled) { border-color: var(--accent); }
+    .choice-opt.sel {
+      border-color: var(--accent);
+      background: rgba(217,119,6,0.12);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .choice-opt:disabled { cursor: default; }
+    .die-info { font-size: 0.75rem; color: var(--muted); display: block; font-weight: 400; }
+    .resolve-btn {
+      padding: 0.3125rem 0.875rem;
+      background: var(--accent);
+      color: #111;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .resolve-btn:hover:not(:disabled) { background: #f59e0b; }
+    .resolve-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.5s linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>&#9876; Tesouro – Tormenta 20</h1>
+    <p>Gerador de recompensas por Nível de Desafio</p>
+  </header>
+
+  <div class="setup">
+    <span class="setup-label">Nível de Desafio</span>
+    <div class="cr-grid" id="crGrid"></div>
+    <div class="actions">
+      <button class="btn-primary" id="rollBtn" disabled>Rolar Tesouro</button>
+      <button class="btn-ghost"   id="clearBtn">Limpar</button>
+    </div>
+  </div>
+
+  <div id="error-msg"></div>
+  <div id="results"></div>
+
+  <script>
+    'use strict';
+
+    const CR_LIST = ['1/4','1/2','1','2','3','4','5','6','7','8','9','10',
+                     '11','12','13','14','15','16','17','18','19','20'];
+
+    const state = {
+      selected: new Set(),  // toggle-selected CR strings
+      crOrder:  [],         // ordered list of CRs sent in last request
+      results:  [],         // TreasureResult[] from API
+      resol:    [],         // per-result: { option, item, loading }
+    };
+
+    // ── Build CR toggle grid ──────────────────────────────────────────────
+
+    const crGrid = document.getElementById('crGrid');
+    for (const cr of CR_LIST) {
+      const btn = document.createElement('button');
+      btn.className = 'cr-btn';
+      btn.textContent = `ND ${cr}`;
+      btn.addEventListener('click', () => {
+        if (state.selected.has(cr)) {
+          state.selected.delete(cr);
+          btn.classList.remove('on');
+        } else {
+          state.selected.add(cr);
+          btn.classList.add('on');
+        }
+        document.getElementById('rollBtn').disabled = state.selected.size === 0;
+      });
+      crGrid.appendChild(btn);
+    }
+
+    // ── Button handlers ───────────────────────────────────────────────────
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      state.results = [];
+      state.resol   = [];
+      renderResults();
+      hideError();
+    });
+
+    document.getElementById('rollBtn').addEventListener('click', async () => {
+      const rollBtn = document.getElementById('rollBtn');
+      rollBtn.disabled = true;
+      rollBtn.innerHTML = '<span class="spinner"></span> Rolando…';
+      hideError();
+
+      state.crOrder = [...state.selected];
+      const qs = state.crOrder
+        .map(cr => `challengeRating=${encodeURIComponent(cr)}`)
+        .join('&');
+
+      try {
+        const res  = await fetch(`/treasure?${qs}`);
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error ?? 'Erro ao rolar tesouro.');
+        state.results = json;
+        state.resol   = json.map(() => ({ option: null, item: null, loading: false }));
+        renderResults();
+      } catch (e) {
+        showError(e.message);
+      } finally {
+        rollBtn.disabled  = state.selected.size === 0;
+        rollBtn.textContent = 'Rolar Tesouro';
+      }
+    });
+
+    // ── Render ────────────────────────────────────────────────────────────
+
+    function renderResults() {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+      state.results.forEach((r, i) => container.appendChild(buildCard(r, i)));
+    }
+
+    function rerenderCard(i) {
+      const old = document.getElementById(`card-${i}`);
+      if (old) old.replaceWith(buildCard(state.results[i], i));
+    }
+
+    function buildCard(result, i) {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.id = `card-${i}`;
+
+      const cr = state.crOrder[i] ?? result.challengeRating;
+      card.innerHTML = `<div class="card-head"><h2>ND ${cr}</h2></div>`;
+      card.appendChild(buildMoneySection(result.money));
+      card.appendChild(buildItemSection(result.item, i));
+      return card;
+    }
+
+    // ── Money section ─────────────────────────────────────────────────────
+
+    function buildMoneySection(money) {
+      const div = document.createElement('div');
+      div.className = 'card-section';
+      div.innerHTML  = '<span class="section-icon">&#128176;</span>'
+                     + '<div class="section-body"><div class="section-title">Moeda</div></div>';
+      const body = div.querySelector('.section-body');
+
+      if (!money || money.currency === '—') {
+        body.insertAdjacentHTML('beforeend', '<div class="none">Sem moeda</div>');
+        return div;
+      }
+
+      const cls = money.currency === 'TC' ? 'tc'
+                : money.currency === 'TO' ? 'to'
+                :                           'ts';
+      body.insertAdjacentHTML('beforeend', `
+        <div class="section-value">
+          <span class="${cls}">${money.amount} ${money.currency}</span>
+        </div>
+        ${money.roll != null ? `<div class="section-meta">Rolagem: ${money.roll}</div>` : ''}
+      `);
+      return div;
+    }
+
+    // ── Item section ──────────────────────────────────────────────────────
+
+    function buildItemSection(item, i) {
+      const div = document.createElement('div');
+      div.className = 'card-section';
+      div.innerHTML  = '<span class="section-icon">&#128230;</span>'
+                     + '<div class="section-body"><div class="section-title">Item</div></div>';
+      const body = div.querySelector('.section-body');
+
+      if (!item || !item.description || item.description === '—') {
+        body.insertAdjacentHTML('beforeend', '<div class="none">Sem item</div>');
+        return div;
+      }
+
+      const flags = [
+        item.hasDualRoll  ? '<span class="badge badge-dual">&#178;&#7496;</span>' : '',
+        item.hasRollBonus ? '<span class="badge badge-bonus">&#x207A;%</span>'    : '',
+      ].join('');
+
+      body.insertAdjacentHTML('beforeend', `
+        <div class="section-value">${item.description}${flags}</div>
+        ${item.roll != null ? `<div class="section-meta">Rolagem: ${item.roll}</div>` : ''}
+      `);
+
+      // Misc item
+      if (item.item) {
+        body.insertAdjacentHTML('beforeend', `
+          <div class="item-box">
+            <div class="iname">${item.item}</div>
+            ${item.miscRoll != null ? `<div class="isub">Rolagem: ${item.miscRoll}</div>` : ''}
+          </div>
+        `);
+      }
+
+      // Potions
+      if (item.potions?.length) {
+        const rows = item.potions.map(p =>
+          `<div class="potion-row">${p.name}<span>${p.price} T$ &middot; rolagem ${p.roll}</span></div>`
+        ).join('');
+        body.insertAdjacentHTML('beforeend', `<div class="potions">${rows}</div>`);
+      }
+
+      // Auto-resolved plain equipment item
+      if (item.resolvedEquipmentItem) {
+        body.appendChild(buildEquipmentBox(item.resolvedEquipmentItem));
+      }
+
+      // Auto-resolved superior item
+      if (item.resolvedSuperiorItem) {
+        body.appendChild(buildSuperiorBox(item.resolvedSuperiorItem));
+      }
+
+      // Auto-resolved magic item
+      if (item.resolvedMagicItem) {
+        body.appendChild(buildMagicBox(item.resolvedMagicItem));
+      }
+
+      // Equipment choices (user must pick)
+      if (item.equipmentChoices) {
+        body.appendChild(buildChoiceUI(item, i));
+      }
+
+      return div;
+    }
+
+    // ── Item detail boxes ─────────────────────────────────────────────────
+
+    function buildEquipmentBox(eq) {
+      const el = document.createElement('div');
+      el.className = 'item-box';
+      el.innerHTML = `
+        <div class="iname">${eq.name}</div>
+        <div class="isub">${eq.type}</div>
+      `;
+      return el;
+    }
+
+    function buildSuperiorBox(sup) {
+      const el = document.createElement('div');
+      el.className = 'item-box';
+      el.innerHTML = `
+        <div class="iname">${sup.baseItemName}</div>
+        <div class="isub">${sup.baseItemType}</div>
+        ${sup.improvements?.length ? `<div class="iimpr">${sup.improvements.join(' &middot; ')}</div>` : ''}
+        ${sup.specialMaterial      ? `<div class="imat">Material: ${sup.specialMaterial}</div>`       : ''}
+      `;
+      return el;
+    }
+
+    function buildMagicBox(magic) {
+      const el = document.createElement('div');
+      el.className = 'item-box';
+      const t = magic.type;
+
+      if (t === 'arma' && magic.weapon) {
+        el.innerHTML = `
+          <div class="iname">${magic.weapon.baseWeaponName}</div>
+          <div class="isub">Arma M&aacute;gica &middot; ${magic.weapon.tier}</div>
+          ${magic.weapon.enchantments?.length ? `<div class="ienc">${magic.weapon.enchantments.join(' &middot; ')}</div>` : ''}
+        `;
+      } else if (t === 'arma-espec\u00edfica' && magic.specificWeapon) {
+        el.innerHTML = `
+          <div class="iname">${magic.specificWeapon.name}</div>
+          <div class="isub">Arma Espec&iacute;fica</div>
+          <div class="iprice">${magic.specificWeapon.price} T$</div>
+        `;
+      } else if ((t === 'armadura' || t === 'escudo') && magic.armor) {
+        el.innerHTML = `
+          <div class="iname">${magic.armor.baseArmorName}</div>
+          <div class="isub">${t === 'escudo' ? 'Escudo M&aacute;gico' : 'Armadura M&aacute;gica'} &middot; ${magic.armor.tier}</div>
+          ${magic.armor.enchantments?.length ? `<div class="ienc">${magic.armor.enchantments.join(' &middot; ')}</div>` : ''}
+        `;
+      } else if (t === 'armadura-espec\u00edfica' && magic.specificArmor) {
+        el.innerHTML = `
+          <div class="iname">${magic.specificArmor.name}</div>
+          <div class="isub">Armadura Espec&iacute;fica</div>
+          <div class="iprice">${magic.specificArmor.price} T$</div>
+        `;
+      } else if (t === 'acess\u00f3rio' && magic.accessory) {
+        el.innerHTML = `
+          <div class="iname">${magic.accessory.name}</div>
+          <div class="isub">Acess&oacute;rio &middot; ${magic.accessory.tier}</div>
+          <div class="iprice">${magic.accessory.price} T$</div>
+        `;
+      } else {
+        el.innerHTML = `<div class="iname">${t}</div>`;
+      }
+      return el;
+    }
+
+    // ── Choice UI (HasDualRoll items) ─────────────────────────────────────
+
+    function buildChoiceUI(item, i) {
+      const resol    = state.resol[i];
+      const choices  = item.equipmentChoices;
+      const dualRoll = choices.die2 != null;
+      const isSup    = item.description.startsWith('Superior');
+      const isMag    = item.description.startsWith('M\u00e1gico');
+
+      const div = document.createElement('div');
+      div.className = 'choices';
+
+      // Already resolved – show the result
+      if (resol.item) {
+        div.appendChild(isSup ? buildSuperiorBox(resol.item) : buildMagicBox(resol.item));
+        return div;
+      }
+
+      div.innerHTML = `<div class="choices-hint">${
+        dualRoll ? 'Escolha uma op&ccedil;&atilde;o (<strong>&#178;&#7496;</strong>):' : 'Tipo sorteado:'
+      }</div>`;
+
+      const btnsDiv = document.createElement('div');
+      btnsDiv.className = 'choice-btns';
+
+      const addOption = (label, die, key, resolvedName) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-opt' + (resol.option === key ? ' sel' : '');
+        const nameHint = resolvedName ? ` &ndash; <em>${resolvedName}</em>` : '';
+        btn.innerHTML = `${label}${nameHint}<span class="die-info">dado: ${die}</span>`;
+        if (dualRoll) {
+          btn.addEventListener('click', () => {
+            state.resol[i].option = key;
+            rerenderCard(i);
+          });
+        } else {
+          btn.disabled = true;
+          btn.classList.add('sel');
+          state.resol[i].option = 'option1';
+        }
+        btnsDiv.appendChild(btn);
+      };
+
+      addOption(choices.option1, choices.die1, 'option1', choices.resolvedItem1);
+      if (dualRoll && choices.option2) {
+        addOption(choices.option2, choices.die2, 'option2', choices.resolvedItem2);
+      }
+      div.appendChild(btnsDiv);
+
+      // Resolve button – only for Superior and Mágico, not plain Equipamento
+      if (isSup || isMag) {
+        const resolveBtn = document.createElement('button');
+        resolveBtn.className = 'resolve-btn';
+        resolveBtn.disabled  = (dualRoll && !resol.option) || resol.loading;
+        resolveBtn.innerHTML = resol.loading ? '<span class="spinner"></span>' : 'Resolver';
+
+        resolveBtn.addEventListener('click', async () => {
+          const chosen = resol.option === 'option2' ? choices.option2 : choices.option1;
+          state.resol[i].loading = true;
+          rerenderCard(i);
+
+          try {
+            let url;
+            if (isSup) {
+              const n = parseImprovements(item.description);
+              url = `/roll/equipment?type=${encodeURIComponent(chosen)}&improvements=${n}`;
+            } else {
+              const tier = parseTier(item.description);
+              url = `/roll/magicItem?type=${encodeURIComponent(chosen)}&tier=${tier}`;
+            }
+            const res  = await fetch(url);
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error ?? 'Erro ao resolver item.');
+            state.resol[i].item = json;
+          } catch (e) {
+            showError(e.message);
+          } finally {
+            state.resol[i].loading = false;
+            rerenderCard(i);
+          }
+        });
+
+        div.appendChild(resolveBtn);
+      }
+
+      return div;
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+
+    function parseImprovements(description) {
+      const m = description.match(/\((\d+)/);
+      return m ? parseInt(m[1], 10) : 1;
+    }
+
+    function parseTier(description) {
+      if (description.includes('menor')) return 'Menor';
+      if (description.includes('m\u00e9dio') || description.includes('medio')) return 'Medio';
+      return 'Maior';
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function hideError() {
+      document.getElementById('error-msg').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
