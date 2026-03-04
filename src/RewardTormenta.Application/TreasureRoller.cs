@@ -46,6 +46,37 @@ public class TreasureRoller
     }
 
     /// <summary>
+    /// Rolls a specific base equipment item for the given type label.
+    /// </summary>
+    public ResolvedEquipmentItem RollBaseEquipmentByType(string type)
+    {
+        string name = type switch
+        {
+            "arma"     => RollWeapon()?.Name       ?? "Desconhecida",
+            "armadura" => RollArmor()?.Name        ?? "Desconhecida",
+            "escudo"   => RollArmor()?.Name        ?? "Desconhecida",
+            _          => RollEsotericItem()?.Name ?? "Desconhecida",
+        };
+        string pretty = type switch
+        {
+            "arma"     => "Arma",
+            "armadura" => "Armadura",
+            "escudo"   => "Escudo",
+            _          => "Esotérico",
+        };
+        return new ResolvedEquipmentItem { Name = name, Type = pretty };
+    }
+
+    /// <summary>
+    /// Rolls the equipment type (1d6) and resolves the specific base item.
+    /// </summary>
+    public ResolvedEquipmentItem RollBaseEquipment()
+    {
+        int die = RollD6();
+        return RollBaseEquipmentByType(EquipmentTypeLabel(die));
+    }
+
+    /// <summary>
     /// Rolls for equipment category selection (1–4 arma, 5 armadura, 6 esotérico).
     /// When <paramref name="dualRoll"/> is <see langword="true"/>, rolls 2d6 and returns two options
     /// for the player to choose from. When <see langword="false"/>, rolls 1d6 and returns a single result.

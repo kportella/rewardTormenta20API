@@ -54,6 +54,8 @@ public class EquipmentChoiceResult
     public int? Die2 { get; init; }           // null when single-die roll
     public required string Option1 { get; init; }
     public string? Option2 { get; init; }     // null when single-die roll
+    public string? ResolvedItem1 { get; init; } // pre-rolled item name for Option1 (Equipamento dual-roll only)
+    public string? ResolvedItem2 { get; init; } // pre-rolled item name for Option2 (Equipamento dual-roll only)
 }
 
 public class ItemResult
@@ -65,7 +67,8 @@ public class ItemResult
     public string? Item { get; init; }                   // resolved misc item name (when Description == "Diverso")
     public int? MiscRoll { get; init; }                  // secondary d100 roll used to pick the misc item
     public List<PotionResult>? Potions { get; init; }    // resolved potions (when Description contains "poção")
-    public EquipmentChoiceResult? EquipmentChoices { get; init; } // 2d6 type options (when Description == "Equipamento" or "Mágico")
-    public SuperiorItem? ResolvedSuperiorItem { get; init; }      // fully resolved item (when Description starts with "Superior" and HasDualRoll == false)
-    public ResolvedMagicItem? ResolvedMagicItem { get; init; }   // fully resolved item (when Description starts with "Mágico" and HasDualRoll == false)
+    public EquipmentChoiceResult? EquipmentChoices { get; init; }       // 2d6 type options (when Description == "Equipamento" or "Mágico")
+    public ResolvedEquipmentItem? ResolvedEquipmentItem { get; init; }  // fully resolved item (when Description == "Equipamento" and HasDualRoll == false)
+    public SuperiorItem? ResolvedSuperiorItem { get; init; }            // fully resolved item (when Description starts with "Superior" and HasDualRoll == false)
+    public ResolvedMagicItem? ResolvedMagicItem { get; init; }          // fully resolved item (when Description starts with "Mágico" and HasDualRoll == false)
 }

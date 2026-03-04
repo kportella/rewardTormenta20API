@@ -20,6 +20,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.MapGet("/treasure", (string[] challengeRating, TreasureRoller roller) =>
@@ -103,6 +105,7 @@ static TreasureResult BuildTreasureResult(string challengeRating, TreasureRoller
         int? miscRoll = null;
         List<PotionResult>? potions = null;
         EquipmentChoiceResult? equipmentChoices = null;
+        ResolvedEquipmentItem? resolvedEquipmentItem = null;
         SuperiorItem? resolvedSuperiorItem = null;
         ResolvedMagicItem? resolvedMagicItem = null;
 
@@ -114,7 +117,25 @@ static TreasureResult BuildTreasureResult(string challengeRating, TreasureRoller
         }
         else if (itemRow.ItemDescription == "Equipamento")
         {
-            equipmentChoices = roller.RollEquipment(itemRow.ItemHasDualRoll);
+            if (!itemRow.ItemHasDualRoll)
+            {
+                resolvedEquipmentItem = roller.RollBaseEquipment();
+            }
+            else
+            {
+                var choices = roller.RollEquipment(dualRoll: true);
+                equipmentChoices = new EquipmentChoiceResult
+                {
+                    Die1          = choices.Die1,
+                    Die2          = choices.Die2,
+                    Option1       = choices.Option1,
+                    Option2       = choices.Option2,
+                    ResolvedItem1 = roller.RollBaseEquipmentByType(choices.Option1).Name,
+                    ResolvedItem2 = choices.Option2 is not null
+                                       ? roller.RollBaseEquipmentByType(choices.Option2).Name
+                                       : null,
+                };
+            }
         }
         else if (itemRow.ItemDescription.StartsWith("Superior"))
         {
@@ -161,9 +182,10 @@ static TreasureResult BuildTreasureResult(string challengeRating, TreasureRoller
             Item                 = miscItemName,
             MiscRoll             = miscRoll,
             Potions              = potions,
-            EquipmentChoices     = equipmentChoices,
-            ResolvedSuperiorItem = resolvedSuperiorItem,
-            ResolvedMagicItem    = resolvedMagicItem
+            EquipmentChoices      = equipmentChoices,
+            ResolvedEquipmentItem = resolvedEquipmentItem,
+            ResolvedSuperiorItem  = resolvedSuperiorItem,
+            ResolvedMagicItem     = resolvedMagicItem
         };
     }
 

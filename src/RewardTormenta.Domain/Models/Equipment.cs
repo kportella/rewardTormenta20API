@@ -124,6 +124,15 @@ public class Accessory
 }
 
 /// <summary>
+/// Represents a plain resolved equipment piece (no improvements) from the Equipamento table.
+/// </summary>
+public class ResolvedEquipmentItem
+{
+    public required string Name { get; init; } // e.g. "Espada longa"
+    public required string Type { get; init; } // "Arma", "Armadura", "Escudo", "Esotérico"
+}
+
+/// <summary>
 /// Wraps the fully-resolved result of a Mágico item roll.
 /// Exactly one of the item fields will be non-null, indicated by <see cref="Type"/>.
 /// Type values: "arma", "arma-específica", "armadura", "escudo", "armadura-específica", "acessório".
