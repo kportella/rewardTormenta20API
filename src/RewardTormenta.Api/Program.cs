@@ -133,13 +133,13 @@ app.MapGet("/treasure", (string challengeRating, TreasureRoller roller) =>
 app.MapGet("/roll/magicItem", (string type, string tier, TreasureRoller roller) =>
 {
     if (!Enum.TryParse<MagicItemTier>(tier, ignoreCase: true, out var magicTier) || int.TryParse(tier, out _))
-        return Results.BadRequest(new { error = $"Unknown tier '{tier}'. Use Menor, Médio, or Maior." });
+        return Results.BadRequest(new { error = $"Unknown tier '{tier}'. Use Menor, Medio, or Maior." });
 
     var validTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        { "arma", "armadura/escudo", "acessório menor", "acessório médio", "acessório maior" };
+        { "arma", "armadura/escudo", "acessorio menor", "acessorio medio", "acessorio maior" };
 
     if (!validTypes.Contains(type))
-        return Results.BadRequest(new { error = $"Unknown type '{type}'. Valid values: arma, armadura/escudo, acessório menor, acessório médio, acessório maior." });
+        return Results.BadRequest(new { error = $"Unknown type '{type}'. Valid values: arma, armadura/escudo, acessorio menor, acessorio medio, acessorio maior." });
 
     var resolved = roller.RollMagicItemByType(type, magicTier);
     return Results.Ok(resolved);
@@ -153,10 +153,10 @@ app.MapGet("/roll/equipment", (string type, int improvements, TreasureRoller rol
         return Results.BadRequest(new { error = "improvements must be between 1 and 4." });
 
     var validTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        { "arma", "armadura", "escudo", "esotérico" };
+        { "arma", "armadura", "escudo", "esoterico" };
 
     if (!validTypes.Contains(type))
-        return Results.BadRequest(new { error = $"Unknown type '{type}'. Valid values: arma, armadura, escudo, esotérico." });
+        return Results.BadRequest(new { error = $"Unknown type '{type}'. Valid values: arma, armadura, escudo, esoterico." });
 
     var item = roller.RollSuperiorItemByType(type, improvements);
     return Results.Ok(item);
@@ -170,7 +170,7 @@ static MagicItemTier ParseMagicItemTier(string description)
 {
     // "Mágico (menor)" → Menor, "Mágico (médio)" → Médio, "Mágico (maior)" → Maior
     if (description.Contains("menor")) return MagicItemTier.Menor;
-    if (description.Contains("médio")) return MagicItemTier.Médio;
+    if (description.Contains("medio")) return MagicItemTier.Medio;
     return MagicItemTier.Maior;
 }
 

@@ -77,7 +77,7 @@ public class TreasureRoller
         <= 3 => "arma",
         4    => "armadura",
         5    => "escudo",
-        _    => "esotérico"
+        _    => "esoterico"
     };
 
     /// <summary>
@@ -112,9 +112,9 @@ public class TreasureRoller
     {
         <= 2 => "arma",
         3    => "armadura/escudo",
-        4    => "acessório menor",
-        5    => "acessório médio",
-        _    => "acessório maior"
+        4    => "acessorio menor",
+        5    => "acessorio medio",
+        _    => "acessorio maior"
     };
 
     // ── Superior item improvements ────────────────────────────────────────────
@@ -149,7 +149,7 @@ public class TreasureRoller
 
     /// <summary>
     /// Resolves a Superior item for the given <paramref name="type"/> and slot count.
-    /// Valid type values: "arma", "armadura", "escudo", "esotérico".
+    /// Valid type values: "arma", "armadura", "escudo", "esoterico".
     /// Double-slot improvements (Atroz/Pungente for weapons, SobMedida for armor) may exceed
     /// the slot budget by 1 — this is intentional.
     /// </summary>
@@ -172,9 +172,9 @@ public class TreasureRoller
                 baseItemName = RollArmor()?.Name ?? "Desconhecida";
                 baseItemType = "Escudo";
                 break;
-            default: // "esotérico"
+            default: // "esoterico"
                 baseItemName = RollEsotericItem()?.Name ?? "Desconhecida";
-                baseItemType = "Esotérico";
+                baseItemType = "Esoterico";
                 break;
         }
 
@@ -205,7 +205,7 @@ public class TreasureRoller
                     slotsUsed += imp is ArmorImprovement.SobMedida ? 2 : 1;
                     break;
                 }
-                default: // "esotérico"
+                default: // "esoterico"
                 {
                     var imp = RollEsotericImprovement();
                     improvements.Add(imp.ToString());
@@ -304,41 +304,41 @@ public class TreasureRoller
             int r = RollD100();
             WeaponEnchantment enchantment = r switch
             {
-                >= 1   and <= 5   => WeaponEnchantment.Ameaçadora,
+                >= 1   and <= 5   => WeaponEnchantment.Ameacadora,
                 >= 6   and <= 10  => WeaponEnchantment.Anticriatura,
                 >= 11  and <= 12  => WeaponEnchantment.Arremesso,
                 >= 13  and <= 14  => WeaponEnchantment.Assassina,
-                >= 15  and <= 16  => WeaponEnchantment.Caçadora,
+                >= 15  and <= 16  => WeaponEnchantment.Cacadora,
                 >= 17  and <= 21  => WeaponEnchantment.Congelante,
                 >= 22  and <= 23  => WeaponEnchantment.Conjuradora,
                 >= 24  and <= 28  => WeaponEnchantment.Corrosiva,
-                >= 29  and <= 30  => WeaponEnchantment.Dançarina,
+                >= 29  and <= 30  => WeaponEnchantment.Dancarina,
                 >= 31  and <= 34  => WeaponEnchantment.Defensora,
                 >= 35  and <= 36  => WeaponEnchantment.Destruidora,
                 >= 37  and <= 38  => WeaponEnchantment.Dilacerante,
                 >= 39  and <= 40  => WeaponEnchantment.Drenante,
-                >= 41  and <= 45  => WeaponEnchantment.Elétrica,
-                46                => WeaponEnchantment.Energética,
+                >= 41  and <= 45  => WeaponEnchantment.Eletrica,
+                46                => WeaponEnchantment.Energetica,
                 >= 47  and <= 48  => WeaponEnchantment.Excruciante,
                 >= 49  and <= 53  => WeaponEnchantment.Flamejante,
-                >= 54  and <= 63  => WeaponEnchantment.Formidável,
+                >= 54  and <= 63  => WeaponEnchantment.Formidavel,
                 64                => WeaponEnchantment.Lancinante,
-                >= 65  and <= 72  => WeaponEnchantment.Magnífica,
+                >= 65  and <= 72  => WeaponEnchantment.Magnifica,
                 >= 73  and <= 74  => WeaponEnchantment.Piedosa,
                 >= 75  and <= 76  => WeaponEnchantment.Profana,
                 >= 77  and <= 78  => WeaponEnchantment.Sagrada,
-                >= 79  and <= 80  => WeaponEnchantment.Sanguinária,
+                >= 79  and <= 80  => WeaponEnchantment.Sanguinaria,
                 >= 81  and <= 82  => WeaponEnchantment.Trovejante,
                 >= 83  and <= 84  => WeaponEnchantment.Tumular,
                 >= 85  and <= 88  => WeaponEnchantment.Veloz,
                 >= 89  and <= 90  => WeaponEnchantment.Venenosa,
-                _                 => WeaponEnchantment.ArmaEspecífica,
+                _                 => WeaponEnchantment.ArmaEspecifica,
             };
 
             // Re-roll double-slot enchantments for minor items
-            if (isMinorItem && enchantment is WeaponEnchantment.Energética
+            if (isMinorItem && enchantment is WeaponEnchantment.Energetica
                                            or WeaponEnchantment.Lancinante
-                                           or WeaponEnchantment.Magnífica)
+                                           or WeaponEnchantment.Magnifica)
                 continue;
 
             return (enchantment, r);
@@ -360,23 +360,23 @@ public class TreasureRoller
             ArmorEnchantment enchantment = r switch
             {
                 >= 1  and <= 6  => ArmorEnchantment.Abascanto,
-                >= 7  and <= 10 => ArmorEnchantment.Abençoado,
-                >= 11 and <= 12 => ArmorEnchantment.Acrobático,
+                >= 7  and <= 10 => ArmorEnchantment.Abencoado,
+                >= 11 and <= 12 => ArmorEnchantment.Acrobatico,
                 >= 13 and <= 14 => ArmorEnchantment.Alado,
                 >= 15 and <= 16 => ArmorEnchantment.Animado,
                 >= 17 and <= 18 => ArmorEnchantment.Assustador,
-                >= 19 and <= 22 => ArmorEnchantment.Cáustica,
+                >= 19 and <= 22 => ArmorEnchantment.Caustica,
                 >= 23 and <= 32 => ArmorEnchantment.Defensor,
                 >= 33 and <= 34 => ArmorEnchantment.Escorregadio,
                 >= 35 and <= 36 => ArmorEnchantment.Esmagador,
-                >= 37 and <= 38 => ArmorEnchantment.Fantasmagórico,
+                >= 37 and <= 38 => ArmorEnchantment.Fantasmagorico,
                 >= 39 and <= 40 => ArmorEnchantment.Fortificado,
-                >= 41 and <= 44 => ArmorEnchantment.Gélido,
-                >= 45 and <= 54 => ArmorEnchantment.Guardião,
-                >= 55 and <= 56 => ArmorEnchantment.Hipnótico,
-                >= 57 and <= 58 => ArmorEnchantment.Ilusório,
+                >= 41 and <= 44 => ArmorEnchantment.Gelido,
+                >= 45 and <= 54 => ArmorEnchantment.Guardiao,
+                >= 55 and <= 56 => ArmorEnchantment.Hipnotico,
+                >= 57 and <= 58 => ArmorEnchantment.Ilusorio,
                 >= 59 and <= 62 => ArmorEnchantment.Incandescente,
-                >= 63 and <= 68 => ArmorEnchantment.Invulnerável,
+                >= 63 and <= 68 => ArmorEnchantment.Invulneravel,
                 >= 69 and <= 72 => ArmorEnchantment.Opaco,
                 >= 73 and <= 78 => ArmorEnchantment.Protetor,
                 >= 79 and <= 80 => ArmorEnchantment.Refletor,
@@ -384,10 +384,10 @@ public class TreasureRoller
                 >= 85 and <= 86 => ArmorEnchantment.Reluzente,
                 >= 87 and <= 88 => ArmorEnchantment.Sombrio,
                 >= 89 and <= 90 => ArmorEnchantment.Zeloso,
-                _               => ArmorEnchantment.ItemEspecífico,
+                _               => ArmorEnchantment.ItemEspecifico,
             };
 
-            if (isMinorItem && enchantment is ArmorEnchantment.Guardião)
+            if (isMinorItem && enchantment is ArmorEnchantment.Guardiao)
                 continue;
 
             if (!isShield && enchantment is ArmorEnchantment.Animado or ArmorEnchantment.Esmagador)
@@ -413,7 +413,7 @@ public class TreasureRoller
     /// <summary>
     /// Resolves a magic item for the given <paramref name="type"/> string and tier.
     /// <paramref name="typeRoll"/> is the d6 value that produced the type (0 when user-chosen).
-    /// Valid type values: "arma", "armadura/escudo", "acessório menor", "acessório médio", "acessório maior".
+    /// Valid type values: "arma", "armadura/escudo", "acessorio menor", "acessorio medio", "acessorio maior".
     /// </summary>
     public ResolvedMagicItem RollMagicItemByType(string type, MagicItemTier tier, int typeRoll = 0)
     {
@@ -421,7 +421,7 @@ public class TreasureRoller
         int slots    = tier switch
         {
             MagicItemTier.Menor => 1,
-            MagicItemTier.Médio => 2,
+            MagicItemTier.Medio => 2,
             _                   => 3  // Maior
         };
 
@@ -431,7 +431,7 @@ public class TreasureRoller
             {
                 // First roll determines the path: specific weapon OR enchanted weapon
                 var (firstEnch, firstRoll) = RollWeaponEnchantment(isMinor);
-                if (firstEnch is WeaponEnchantment.ArmaEspecífica)
+                if (firstEnch is WeaponEnchantment.ArmaEspecifica)
                 {
                     int itemRoll = RollD100();
                     return new ResolvedMagicItem
@@ -447,19 +447,19 @@ public class TreasureRoller
                 // Enchanted weapon — fill remaining slots (re-roll ArmaEspecífica)
                 var enchantments     = new List<WeaponEnchantment> { firstEnch };
                 var enchantmentRolls = new List<int> { firstRoll };
-                int slotsUsed        = firstEnch is WeaponEnchantment.Energética
+                int slotsUsed        = firstEnch is WeaponEnchantment.Energetica
                                                   or WeaponEnchantment.Lancinante
-                                                  or WeaponEnchantment.Magnífica ? 2 : 1;
+                                                  or WeaponEnchantment.Magnifica ? 2 : 1;
 
                 while (slotsUsed < slots)
                 {
                     var (enc, encRoll) = RollWeaponEnchantment(isMinor);
-                    if (enc is WeaponEnchantment.ArmaEspecífica) continue;
+                    if (enc is WeaponEnchantment.ArmaEspecifica) continue;
                     enchantments.Add(enc);
                     enchantmentRolls.Add(encRoll);
-                    slotsUsed += enc is WeaponEnchantment.Energética
+                    slotsUsed += enc is WeaponEnchantment.Energetica
                                        or WeaponEnchantment.Lancinante
-                                       or WeaponEnchantment.Magnífica ? 2 : 1;
+                                       or WeaponEnchantment.Magnifica ? 2 : 1;
                 }
 
                 return new ResolvedMagicItem
@@ -484,7 +484,7 @@ public class TreasureRoller
 
                 // First roll determines the path: specific armor OR enchanted armor/shield
                 var (firstEnch, firstRoll) = RollArmorEnchantment(isMinor, isShield);
-                if (firstEnch is ArmorEnchantment.ItemEspecífico)
+                if (firstEnch is ArmorEnchantment.ItemEspecifico)
                 {
                     int itemRoll = RollD100();
                     return new ResolvedMagicItem
@@ -499,15 +499,15 @@ public class TreasureRoller
 
                 var enchantments     = new List<ArmorEnchantment> { firstEnch };
                 var enchantmentRolls = new List<int> { firstRoll };
-                int slotsUsed        = firstEnch is ArmorEnchantment.Guardião ? 2 : 1;
+                int slotsUsed        = firstEnch is ArmorEnchantment.Guardiao ? 2 : 1;
 
                 while (slotsUsed < slots)
                 {
                     var (enc, encRoll) = RollArmorEnchantment(isMinor, isShield);
-                    if (enc is ArmorEnchantment.ItemEspecífico) continue;
+                    if (enc is ArmorEnchantment.ItemEspecifico) continue;
                     enchantments.Add(enc);
                     enchantmentRolls.Add(encRoll);
-                    slotsUsed += enc is ArmorEnchantment.Guardião ? 2 : 1;
+                    slotsUsed += enc is ArmorEnchantment.Guardiao ? 2 : 1;
                 }
 
                 return new ResolvedMagicItem
@@ -524,14 +524,14 @@ public class TreasureRoller
                 };
             }
 
-            case "acessório menor":
-            case "acessório médio":
-            default: // "acessório maior"
+            case "acessorio menor":
+            case "acessorio medio":
+            default: // "acessorio maior"
             {
                 var accessoryTier = type switch
                 {
-                    "acessório menor" => MagicItemTier.Menor,
-                    "acessório médio" => MagicItemTier.Médio,
+                    "acessorio menor" => MagicItemTier.Menor,
+                    "acessorio medio" => MagicItemTier.Medio,
                     _                 => MagicItemTier.Maior
                 };
                 int itemRoll = RollD100();
@@ -596,7 +596,7 @@ public class TreasureRoller
         TreasureTier tier = tierWord switch
         {
             "menor"  or "menores" => TreasureTier.Menor,
-            "média"  or "médias"  => TreasureTier.Média,
+            "media"  or "medias"  => TreasureTier.Media,
             "maior"  or "maiores" => TreasureTier.Maior,
             _ => throw new ArgumentException($"Unknown wealth tier: {tierWord}")
         };

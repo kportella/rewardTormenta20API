@@ -2,44 +2,44 @@ namespace RewardTormenta.Domain.Models;
 
 public enum WeaponEnchantment
 {
-    Ameaçadora,
+    Ameacadora,
     Anticriatura,
     Arremesso,
     Assassina,
-    Caçadora,
+    Cacadora,
     Congelante,
     Conjuradora,
     Corrosiva,
-    Dançarina,
+    Dancarina,
     Defensora,
     Destruidora,
     Dilacerante,
     Drenante,
-    Elétrica,
-    Energética,        // Conta como dois encantos
+    Eletrica,
+    Energetica,        // Conta como dois encantos
     Excruciante,
     Flamejante,
-    Formidável,
+    Formidavel,
     Lancinante,        // Conta como dois encantos
-    Magnífica,         // Conta como dois encantos
+    Magnifica,         // Conta como dois encantos
     Piedosa,
     Profana,
     Sagrada,
-    Sanguinária,
+    Sanguinaria,
     Trovejante,
     Tumular,
     Veloz,
     Venenosa,
-    ArmaEspecífica
+    ArmaEspecifica
 }
 
 public enum SpecialMaterial
 {
-    AçoRubi = 1,
+    AcoRubi = 1,
     Adamante = 2,
     GeloEterno = 3,
     MadeiraTollon = 4,
-    MatériaVermelha = 5,
+    MateriaVermelha = 5,
     Mitral = 6
 }
 
@@ -53,9 +53,9 @@ public enum WeaponImprovement
     Discreta,
     Equilibrada,
     Harmonizada,
-    InjeçãoAlquímica,
+    InjecaoAlquimica,
     Macabra,
-    Maciça,
+    Macica,
     MaterialEspecial,
     MiraTelescoópica,
     Precisa,
@@ -73,7 +73,7 @@ public enum ArmorImprovement
     Macabra,
     MaterialEspecial,
     Polida,
-    Reforçada,
+    Reforcada,
     Selada,
     SobMedida           // Conta como duas melhorias
 }
@@ -84,7 +84,7 @@ public enum EsotericImprovement
     Canalizador,
     CravejaDeGemas,
     Discreto,
-    Energético,
+    Energetico,
     Harmonizado,
     Macabro,
     MaterialEspecial,
@@ -94,37 +94,37 @@ public enum EsotericImprovement
 public enum TreasureTier
 {
     Menor,
-    Média,
+    Media,
     Maior
 }
 
 public enum MagicItemTier
 {
     Menor,
-    Médio,
+    Medio,
     Maior
 }
 
 public enum ArmorEnchantment
 {
     Abascanto,
-    Abençoado,
-    Acrobático,
+    Abencoado,
+    Acrobatico,
     Alado,
     Animado,           // Apenas escudos. Para armaduras, role novamente.
     Assustador,
-    Cáustica,
+    Caustica,
     Defensor,
     Escorregadio,
     Esmagador,         // Apenas escudos. Para armaduras, role novamente.
-    Fantasmagórico,
+    Fantasmagorico,
     Fortificado,
-    Gélido,
-    Guardião,          // Conta como dois encantos. Para itens menores, role novamente.
-    Hipnótico,
-    Ilusório,
+    Gelido,
+    Guardiao,          // Conta como dois encantos. Para itens menores, role novamente.
+    Hipnotico,
+    Ilusorio,
     Incandescente,
-    Invulnerável,
+    Invulneravel,
     Opaco,
     Protetor,
     Refletor,
@@ -132,5 +132,5 @@ public enum ArmorEnchantment
     Reluzente,
     Sombrio,
     Zeloso,
-    ItemEspecífico
+    ItemEspecifico
 }

@@ -68,9 +68,9 @@ public class MagicWeapon
     /// Total enchantment count — Energética, Lancinante, and Magnífica count as two.
     /// </summary>
     public int TotalEnchantmentSlots =>
-        Enchantments.Sum(e => e is WeaponEnchantment.Energética
+        Enchantments.Sum(e => e is WeaponEnchantment.Energetica
                               or WeaponEnchantment.Lancinante
-                              or WeaponEnchantment.Magnífica ? 2 : 1);
+                              or WeaponEnchantment.Magnifica ? 2 : 1);
 }
 
 /// <summary>
@@ -97,7 +97,7 @@ public class MagicArmor
     /// Total enchantment count — Guardião counts as two.
     /// </summary>
     public int TotalEnchantmentSlots =>
-        Enchantments.Sum(e => e is ArmorEnchantment.Guardião ? 2 : 1);
+        Enchantments.Sum(e => e is ArmorEnchantment.Guardiao ? 2 : 1);
 }
 
 /// <summary>
