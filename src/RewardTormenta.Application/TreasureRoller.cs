@@ -138,18 +138,24 @@ public class TreasureRoller
     }
 
     /// <summary>
-    /// Fully resolves a Superior item: rolls equipment type (1d6), base item (d100),
-    /// and improvements until <paramref name="slots"/> are filled.
-    /// Double-slot improvements (Atroz/Pungente for weapons, SobMedida for armor) may exceed
-    /// the slot budget by 1 — this is intentional.
+    /// Fully resolves a Superior item: rolls equipment type (1d6) then delegates to
+    /// <see cref="RollSuperiorItemByType"/>.
     /// </summary>
     public SuperiorItem RollSuperiorItem(int slots)
     {
-        // 1. Roll equipment type
         int die    = RollD6();
-        string type = EquipmentTypeLabel(die); // "arma" | "armadura" | "escudo" | "esotérico"
+        return RollSuperiorItemByType(EquipmentTypeLabel(die), slots);
+    }
 
-        // 2. Roll base item
+    /// <summary>
+    /// Resolves a Superior item for the given <paramref name="type"/> and slot count.
+    /// Valid type values: "arma", "armadura", "escudo", "esotérico".
+    /// Double-slot improvements (Atroz/Pungente for weapons, SobMedida for armor) may exceed
+    /// the slot budget by 1 — this is intentional.
+    /// </summary>
+    public SuperiorItem RollSuperiorItemByType(string type, int slots)
+    {
+        // 1. Roll base item
         string baseItemName;
         string baseItemType;
         switch (type)
@@ -172,7 +178,7 @@ public class TreasureRoller
                 break;
         }
 
-        // 3. Roll improvements until slots are filled
+        // 2. Roll improvements until slots are filled
         var improvements         = new List<string>();
         SpecialMaterial? material = null;
         int slotsUsed            = 0;

@@ -147,6 +147,23 @@ app.MapGet("/roll/magicItem", (string type, string tier, TreasureRoller roller) 
 .WithName("RollMagicItem")
 .WithOpenApi();
 
+app.MapGet("/roll/equipment", (string type, int improvements, TreasureRoller roller) =>
+{
+    if (improvements is < 1 or > 4)
+        return Results.BadRequest(new { error = "improvements must be between 1 and 4." });
+
+    var validTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        { "arma", "armadura", "escudo", "esotérico" };
+
+    if (!validTypes.Contains(type))
+        return Results.BadRequest(new { error = $"Unknown type '{type}'. Valid values: arma, armadura, escudo, esotérico." });
+
+    var item = roller.RollSuperiorItemByType(type, improvements);
+    return Results.Ok(item);
+})
+.WithName("RollEquipment")
+.WithOpenApi();
+
 app.Run();
 
 static MagicItemTier ParseMagicItemTier(string description)
